@@ -1,5 +1,3 @@
-
-
 - name: Install k3s server
   hosts: pi-a
   become: yes

@@ -1,9 +1,8 @@
-
 - name: Install k3s agent
   hosts: k8s-worker-nodes
   become: yes
   tasks:
-    - name: install k3s agent
+    - name: install k3s agents
       args:
         creates: /usr/local/bin/k3s-agent-uninstall.sh
       ansible.builtin.shell: |

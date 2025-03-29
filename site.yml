@@ -1,3 +1,4 @@
 - import_playbook: playbooks/apt-update.yaml
 - import_playbook: playbooks/docker.yaml
-- import_playbook: playbooks/install-k3s.yaml
+- import_playbook: playbooks/k3s-server.yaml
+- import_playbook: playbooks/k3s-workers.yaml
