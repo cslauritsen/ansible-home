@@ -1,0 +1,9 @@
+- name: Test Vault Token Drop
+  hosts: rpi-cluster
+  become: no
+  tasks:
+    - name: drop token
+      args:
+        creates: /tmp/tok
+      ansible.builtin.shell: |
+        echo {{ lookup('file', 'k3s_token.txt') }} | tee /tmp/tok

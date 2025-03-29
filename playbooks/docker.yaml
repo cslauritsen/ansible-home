@@ -1,0 +1,54 @@
+---
+- name: Setup /etc/hosts
+  hosts: all
+  become: yes
+  tasks:
+    - name: Add pi-a to /etc/hosts
+      ansible.builtin.lineinfile:
+        line: 10.42.42.10    pi-a pi-a.local
+        path: /etc/hosts
+    - name: Add pi-b to /etc/hosts
+      ansible.builtin.lineinfile:
+        line: 10.42.42.11    pi-b pi-b.local
+        path: /etc/hosts
+    - name: Add pi-a to /etc/hosts
+      ansible.builtin.lineinfile:
+        line: 10.42.42.12    pi-c pi-c.local
+        path: /etc/hosts
+
+- name: Append cgroup settings to cmdline.txt
+  hosts: rpi-cluster
+  become: yes
+  tags:
+    - rpi
+  tasks:
+    - name: Ensure the text is present in /boot/firmware/cmdline.txt
+      args:
+        creates: /etc/cmdline_patched_for_containers
+      register: cmdline_check
+      ansible.builtin.shell: |
+        set -e
+        f=/boot/firmware/cmdline.txt
+        if ! grep -q "cgroup_enable=cpuset cgroup_enable=memory cgroup_memory=1 swapaccount=1" $f; then
+          line1=$(tr -d '\012' < $f)
+          echo "$line1 cgroup_enable=cpuset cgroup_enable=memory cgroup_memory=1 swapaccount=1" > $f        
+          touch /etc/cmdline_patched_for_containers
+        fi
+
+    - name: Reboot the machine if cmdline.txt was changed
+      ansible.builtin.reboot:
+        reboot_timeout: 600
+      when: cmdline_check.changed
+
+- name: Install docker.io
+  hosts: rpi-cluster
+  become: yes
+  tasks:
+    - name: Install docker.io
+      ansible.builtin.apt:
+        name: docker.io
+        state: present
+        update_cache: yes
+
+
+      

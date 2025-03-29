@@ -1,0 +1,22 @@
+rpi-cluster:
+  hosts:
+    pi-a:
+    pi-b:
+    pi-c:
+
+k8s-control-plane-nodes:
+  hosts:
+    pi-a:
+
+k8s-worker-nodes:
+  hosts:
+    pi-b:
+    pi-c:
+
+k8s-nodes:
+  hosts:
+    pi-c:
+#    children:
+#        k8s-control-plane-nodes:
+#        k8s-worker-nodes:
+

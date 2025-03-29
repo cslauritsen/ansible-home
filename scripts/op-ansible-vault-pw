@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# Ansible vault "plugin" script to get
+# the ansible vault secret for encryption from
+# a 1Password vault.
+
+# Parse command-line arguments
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        --vault-id) vault_id="$2"; shift ;;
+        *) echo "Unknown parameter passed: $1" ; exit 1 ;;
+    esac
+    shift
+done
+
+# Check if vault_id is set
+if [ -z "$vault_id" ]; then
+#    echo "Error: --vault-id parameter is required"
+#    exit 1
+    # use a default
+    vault_id=yum6o63vwftuvyivwg35vgxtzm
+fi
+
+# Use the vault_id parameter, write the secret to stdout
+op read "op://Private/$vault_id/password"

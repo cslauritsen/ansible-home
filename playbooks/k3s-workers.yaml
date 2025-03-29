@@ -1,0 +1,11 @@
+
+- name: Install k3s agent
+  hosts: k8s-worker-nodes
+  become: yes
+  tasks:
+    - name: install k3s agent
+      args:
+        creates: /usr/local/bin/k3s-agent-uninstall.sh
+      ansible.builtin.shell: |
+        curl -L https://get.k3s.io \
+         | K3S_URL=https://pi-a:6443 K3S_TOKEN={{ lookup('file', 'k3s_token.txt') }} sh -

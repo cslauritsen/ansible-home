@@ -1,0 +1,9 @@
+- name: Test Ping
+  hosts: all
+  tasks:
+   - action: ping
+- name: Gather facts
+  hosts: all
+  tasks:
+    - name: Collect facts
+      ansible.builtin.setup:
