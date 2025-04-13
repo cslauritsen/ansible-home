@@ -1,0 +1,23 @@
+#- name: Uninstall k3s agent
+#  hosts: k8s-worker-nodes
+#  become: yes
+
+- name: Install k3s agent
+  hosts: k8s-worker-nodes
+  become: yes
+  tasks:
+    - name: uninstann k3s agents
+      args:
+          removes: /usr/local/bin/k3s-agent-uninstall.sh
+      ansible.builtin.shell: /usr/local/bin/k3s-agent-uninstall.sh
+      ignore_errors: yes
+    - name: install k3s agents
+      args:
+        creates: /usr/local/bin/k3s-agent-uninstall.sh
+      ansible.builtin.shell: |
+        curl -L https://get.k3s.io \
+         | \
+          K3S_URL=https://pi-0.local:6443 \
+          K3S_TOKEN={{ lookup('file', 'k3s_token.txt') }} \
+          INSTALL_K3S_EXEC="{{ k3s.options }}" \
+          sh -

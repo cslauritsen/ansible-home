@@ -1,0 +1,33 @@
+---
+- name: Allow nginx to bind to low ports without root
+  hosts: rpi-cluster
+  become: yes
+  tasks:
+    - name: Install libcap2-bin (for setcap)
+      apt:
+        name: libcap2-bin
+        state: present
+      when: ansible_os_family == 'Debian'
+
+    - name: Ensure nginx can bind to privileged ports (80, 443)
+      command: setcap 'cap_net_bind_service=+ep' /usr/sbin/nginx
+      args:
+        removes: /usr/sbin/nginx
+      become: yes
+
+#    - name: Restart nginx deployment (if running in k8s)
+#      k8s:
+#        name: ingress-nginx-controller
+#        namespace: ingress-nginx
+#        state: restarted
+#        kind: Deployment
+#      when: ansible_virtualization_type == 'kvm'
+
+    - name: Check if the setcap worked
+      command: getcap /usr/sbin/nginx
+      register: nginx_cap
+      ignore_errors: yes
+
+    - name: Display setcap result
+      debug:
+        msg: "The current capabilities of nginx: {{ nginx_cap.stdout }}"

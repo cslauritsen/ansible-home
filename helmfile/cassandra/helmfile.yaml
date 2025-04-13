@@ -1,0 +1,16 @@
+#helm install my-release oci://registry-1.docker.io/bitnamicharts/cassandra
+releases:
+  - name: cassie
+    namespace: cassie
+    createNamespace: true
+    chart: oci://registry-1.docker.io/bitnamicharts/cassandra
+    version: 12.3.1
+    values:
+      - persistence:
+          enabled: true
+          size: 8Gi
+          storageClass: "longhorn"
+      - service:
+          loadBalancerIP: 192.168.1.9
+          annotations:
+            metallb.universe.tf/allow-shared-ip: 192.168.1.9

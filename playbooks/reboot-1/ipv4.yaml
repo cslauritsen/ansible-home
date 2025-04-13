@@ -1,0 +1,33 @@
+- name: Configure IP address for individual hosts
+  hosts: all
+  become: yes
+  tasks:
+    - name: Set static IP address for pi-0
+      ansible.builtin.shell: |
+        nmcli con mod "Wired connection 1" ipv4.addresses {{ pi0.ipv4.addr }}/{{ pi0.ipv4.cidr }} ipv4.gateway {{ pi0.ipv4.gw }} ipv4.dns "{{pi0.ipv4.dns}}" ipv4.method manual
+        nmcli con up "Wired connection 1"
+      when: inventory_hostname == "pi-0"
+    - name: Reboot pi-0
+      ansible.builtin.reboot:
+        reboot_timeout: 600
+      when: inventory_hostname == "pi-0"
+
+    - name: Set static IP address for pi-1
+      ansible.builtin.shell: |
+        nmcli con mod "Wired connection 1" ipv4.addresses {{ pi1.ipv4.addr }}/{{ pi1.ipv4.cidr }} ipv4.gateway {{ pi1.ipv4.gw }} ipv4.dns "{{pi1.ipv4.dns}}" ipv4.method manual
+        nmcli con up "Wired connection 1"
+      when: inventory_hostname == "pi-1"
+    - name: Reboot pi-1
+      ansible.builtin.reboot:
+        reboot_timeout: 600
+      when: inventory_hostname == "pi-1"
+
+    - name: Set static IP address for pi-2
+      ansible.builtin.shell: |
+        nmcli con mod "Wired connection 1" ipv4.addresses {{ pi2.ipv4.addr }}/{{ pi2.ipv4.cidr }} ipv4.gateway {{ pi2.ipv4.gw }} ipv4.dns "{{pi2.ipv4.dns}}" ipv4.method manual
+        nmcli con up "Wired connection 1"
+      when: inventory_hostname == "pi-2"
+    - name: Reboot pi-2
+      ansible.builtin.reboot:
+        reboot_timeout: 600
+      when: inventory_hostname == "pi-2"

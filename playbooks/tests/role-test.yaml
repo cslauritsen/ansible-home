@@ -1,0 +1,34 @@
+---
+- name: Test IP Addr vars 0
+  hosts: pi-0
+  roles:
+    - node-0
+  tasks:
+    - name: ipaddr
+      debug:
+        var: ipv4.addr
+
+- name: Test IP Addr vars 1
+  hosts: pi-1
+  roles:
+    - node-1
+  tasks:
+    - name: ipaddr
+      debug:
+        var: ipv4.addr
+
+- name: Test IP Addr vars 2
+  hosts: pi-2
+  roles:
+    - node-2
+  tasks:
+    - name: ipaddr
+      debug:
+        var: ipv4.addr
+
+- name: Test Global IP Addr vars 0
+  hosts: all
+  tasks:
+    - name: ipaddr
+      debug:
+        var: pi-0.ipv4.addr

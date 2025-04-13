@@ -1,0 +1,8 @@
+- name: Install iSCSI
+  hosts: rpi-cluster
+  tasks:
+    - name: install iscsi
+      become: yes
+      ansible.builtin.apt:
+        name: open-iscsi
+        state: present

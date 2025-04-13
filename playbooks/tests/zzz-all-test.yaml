@@ -1,0 +1,21 @@
+---
+- name: Test IP Addr vars 0
+  hosts: all
+  tasks:
+    - name: ipaddr
+      debug:
+        var: pi0.ipv4.addr
+
+- name: Test IP Addr vars 1
+  hosts: all
+  tasks:
+    - name: ipaddr
+      debug:
+        var: pi0.ipv4.addr
+
+- name: Test IP Addr vars 2
+  hosts: all
+  tasks:
+    - name: ipaddr
+      debug:
+        var: pi0.ipv4.addr

@@ -1,0 +1,159 @@
+#apiVersion: v1
+#kind: ConfigMap
+#metadata:
+#  name: avahi-config
+#  namespace: kube-system
+#data:
+#  avahi-daemon.conf: |
+#    [server]
+#    host-name=avahi
+#    domain-name=local
+#    use-ipv4=yes
+#    use-ipv6=no
+#    allow-interfaces=eth0
+#
+#    [publish]
+#    publish-addresses=yes
+#    publish-hinfo=yes
+#    publish-workstation=yes
+#    publish-domain=yes
+#
+#    [reflector]
+#    enable-reflector=no
+#
+#    [rlimits]
+#    rlimit-core=0
+#    rlimit-data=4194304
+#    rlimit-fsize=0
+#    rlimit-nofile=300
+#    rlimit-stack=4194304
+#    rlimit-nproc=3
+#
+#  services.conf: |
+#    <?xml version="1.0" standalone='no'?>
+#    <!DOCTYPE service-group SYSTEM "avahi-service.dtd">
+#    <service-group>
+#      <name replace-wildcards="yes">longhorn.local</name>
+#      <service>
+#        <type>_http._tcp</type>
+#        <port>80</port>
+#        <host-name>longhorn.local</host-name>
+#        <address>192.168.1.9</address>
+#      </service>
+#      <name replace-wildcards="yes">james.local</name>
+#      <service>
+#        <type>_http._tcp</type>
+#        <port>80</port>
+#        <host-name>james.local</host-name>
+#        <address>192.168.1.9</address>
+#      </service>
+#    </service-group>
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: avahi-config
+  namespace: kube-system
+data:
+  avahi-daemon.conf: |
+    [server]
+    host-name=avahi
+    domain-name=local
+    use-ipv4=yes
+    use-ipv6=no
+    allow-interfaces=eth0
+    enable-dbus=no
+
+    [publish]
+    publish-addresses=yes
+    publish-hinfo=yes
+    publish-workstation=yes
+    publish-domain=yes
+
+    [reflector]
+    enable-reflector=no
+
+    [rlimits]
+    rlimit-core=0
+    rlimit-data=4194304
+    rlimit-fsize=0
+    rlimit-nofile=300
+    rlimit-stack=4194304
+    rlimit-nproc=3
+  hosts: |
+    192.168.1.8 longhorn.local
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: avahi-services
+  namespace: kube-system
+data:
+  chad.service: |
+    <service-group>
+      <name replace-wildcards="yes">longhorn.local</name>
+      <service>
+        <type>_http._tcp</type>
+        <port>80</port>
+        <host-name>chad.local</host-name>
+      </service>
+    </service-group>
+#  longhorn.service: |
+#    <service-group>
+#      <name replace-wildcards="yes">longhorn.local</name>
+#      <service>
+#        <type>_http._tcp</type>
+#        <port>80</port>
+#        <host-name>longhorn.local</host-name>
+#        <address>192.168.1.8</address>
+#      </service>
+#    </service-group>
+#  james.service: |
+#    <service-group>
+#      <name replace-wildcards="yes">james.local</name>
+#      <service>
+#        <type>_http._tcp</type>
+#        <port>80</port>
+#        <host-name>james.local</host-name>
+#        <address>192.168.1.8</address>
+#      </service>
+#    </service-group>
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: avahi
+  namespace: kube-system
+spec:
+  selector:
+    matchLabels:
+      app: avahi
+  template:
+    metadata:
+      labels:
+        app: avahi
+    spec:
+      hostNetwork: true
+      containers:
+        - name: avahi
+          image: ydkn/avahi:latest
+          securityContext:
+            runAsUser: 0
+            runAsGroup: 0
+            privileged: true
+            capabilities:
+              add:
+                - NET_ADMIN
+                - NET_RAW
+          volumeMounts:
+            - name: avahi-config
+              mountPath: /etc/avahi
+            - name: avahi-services
+              mountPath: /etc/avahi/services/
+      volumes:
+        - name: avahi-config
+          configMap:
+            name: avahi-config
+        - name: avahi-services
+          configMap:
+            name: avahi-services

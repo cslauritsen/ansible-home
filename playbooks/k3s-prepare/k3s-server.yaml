@@ -1,16 +1,20 @@
 - name: Install k3s server
-  hosts: pi-a
+  hosts: pi-0
   become: yes
   tasks:
     - name: install k3s
       args:
         creates: /var/lib/rancher/k3s/server/node-token
+
+#          K3S_URL=https://pi-0.local:6443 \
       ansible.builtin.shell: |
         curl -L https://get.k3s.io \
-          | K3S_TOKEN={{ lookup('file', 'k3s_token.txt') }} sh -
+          | K3S_TOKEN={{ lookup('file', 'k3s_token.txt') }} \
+            INSTALL_K3S_EXEC="server {{ k3s.options }} {{ k3s.server_options }}--tls-san pi-0.local --tls-san {{ pi0.ipv4.addr }}" \
+            sh -
 
 - name: Download & Encrypt kubeconfig
-  hosts: pi-a
+  hosts: pi-0
   become: yes
   tasks:
     - name: Fetch kubeconfig

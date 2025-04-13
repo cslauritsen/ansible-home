@@ -1,0 +1,42 @@
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: eight
+  namespace: metallb-system
+spec:
+  addresses:
+    - 192.168.1.8-192.168.1.8
+---
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: eight
+  namespace: metallb-system
+spec:
+  ipAddressPools:
+    - eight
+  nodeSelectors:
+    # This is needed because eero cannot match to my floating IP
+    # so i have to pin
+    - matchLabels:
+        kubernetes.io/hostname: pi-1
+---
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: nine
+  namespace: metallb-system
+spec:
+  addresses:
+    - 192.168.1.9-192.168.1.9
+---
+# We'll allow nine to float, it won't be NATtable by an eero
+# you'll have to use "eight" for that
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: nine
+  namespace: metallb-system
+spec:
+  ipAddressPools:
+    - nine

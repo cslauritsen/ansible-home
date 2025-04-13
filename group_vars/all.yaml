@@ -1,0 +1,21 @@
+pi0:
+  ipv4:
+    addr: 192.168.1.10
+    gw: 192.168.1.1
+    cidr: 24
+    dns: 8.8.8.8,8.8.4.4
+pi1:
+  ipv4:
+    addr: 192.168.1.11
+    gw: 192.168.1.1
+    cidr: 24
+    dns: 8.8.8.8,8.8.4.4
+pi2:
+  ipv4:
+    addr: 192.168.1.12
+    gw: 192.168.1.1
+    cidr: 24
+    dns: 8.8.8.8,8.8.4.4
+k3s:
+  options: "--docker"
+  server_options: "--disable=traefik --disable=servicelb --secrets-encryption"

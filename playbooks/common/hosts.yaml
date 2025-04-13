@@ -1,0 +1,34 @@
+
+- name: Setup /etc/hosts
+  hosts: all
+  become: yes
+  tasks:
+    - name: Add pi-0 to /etc/hosts
+      ansible.builtin.lineinfile:
+        line: "{{ pi0.ipv4.addr }}    pi-0 pi-0.local"
+        path: /etc/hosts
+    - name: Add pi-1 to /etc/hosts
+      ansible.builtin.lineinfile:
+        line: "{{ pi1.ipv4.addr }}    pi-1 pi-1.local"
+        path: /etc/hosts
+    - name: Add pi-0 to /etc/hosts
+      ansible.builtin.lineinfile:
+        line: "{{ pi2.ipv4.addr }}    pi-2 pi-2.local"
+        path: /etc/hosts
+
+- name: Setup /etc/avahi/hosts
+  hosts: rpi-cluster
+  become: yes
+  tasks:
+    - name: Add longhorn.local to avahi hosts
+      ansible.builtin.lineinfile:
+        line: "192.168.1.8 longhorn.local"
+        path: /etc/avahi/hosts
+    - name: Add chad.local to avahi hosts
+      ansible.builtin.lineinfile:
+        line: "192.168.1.8 chad.local"
+        path: /etc/avahi/hosts
+    - name: Add james.local to avahi hosts
+      ansible.builtin.lineinfile:
+        line: "192.168.1.8 james.local"
+        path: /etc/avahi/hosts

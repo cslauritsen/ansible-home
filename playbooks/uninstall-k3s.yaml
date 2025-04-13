@@ -15,3 +15,22 @@
         removes: /usr/local/bin/k3s-uninstall.sh
       ansible.builtin.shell: /usr/local/bin/k3s-uninstall.sh
       when: file_check.stat.exists
+
+- name: Check if the agent uninstall script exists
+  hosts: rpi-cluster
+  tasks:
+    - name: Check for the presence of the uninstaller
+      ansible.builtin.stat:
+        path: /usr/local/bin/k3s-agent-uninstall.sh
+      register: agent_file_check
+
+- name: Uninstall k3s agent
+  hosts: rpi-cluster
+  become: yes
+  tasks:
+    - name: uninstall k3s
+      args:
+        removes: /usr/local/bin/k3s-agent-uninstall.sh
+      ansible.builtin.shell: /usr/local/bin/k3s-agent-uninstall.sh
+      when: agent_file_check.stat.exists
+

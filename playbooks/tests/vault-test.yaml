@@ -1,0 +1,22 @@
+#- name: Test Vault Token Drop
+#  hosts: rpi-cluster
+#  become: no
+#  tasks:
+#    - name: drop token
+#      args:
+#        creates: /tmp/tok
+#      ansible.builtin.shell: |
+#        echo {{ lookup('file', 'k3s_token.txt') }} | tee /tmp/tok
+- name: Test IP Addr vars
+  hosts: rpi-cluster
+  become: no
+  tasks:
+    - name: pi-0 ipaddr
+      debug:
+        var: pi-0.ipv4.addr
+    - name: pi-1 ipaddr
+      debug:
+        var: pi-1.ipv4.addr
+    - name: pi-2 ipaddr
+      debug:
+        var: pi-2.ipv4.addr

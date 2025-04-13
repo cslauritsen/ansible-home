@@ -1,0 +1,14 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: wildcard-home-planetlauritsen
+  namespace: longhorn-system
+spec:
+  secretName: wildcard-home-planetlauritsen-tls
+  issuerRef:
+    name: letsencrypt-dns
+    kind: ClusterIssuer
+  commonName: '*.home.planetlauritsen.com'
+  dnsNames:
+    - '*.home.planetlauritsen.com'
+    - 'home.planetlauritsen.com'

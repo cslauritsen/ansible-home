@@ -1,19 +1,19 @@
----
+
 - name: Setup /etc/hosts
   hosts: all
   become: yes
   tasks:
-    - name: Add pi-a to /etc/hosts
+    - name: Add pi-0 to /etc/hosts
       ansible.builtin.lineinfile:
-        line: 10.42.42.10    pi-a pi-a.local
+        line: "{{ pi0.ipv4.addr }}    pi-0 pi-0.local"
         path: /etc/hosts
-    - name: Add pi-b to /etc/hosts
+    - name: Add pi-1 to /etc/hosts
       ansible.builtin.lineinfile:
-        line: 10.42.42.11    pi-b pi-b.local
+        line: "{{ pi1.ipv4.addr }}    pi-1 pi-1.local"
         path: /etc/hosts
-    - name: Add pi-a to /etc/hosts
+    - name: Add pi-0 to /etc/hosts
       ansible.builtin.lineinfile:
-        line: 10.42.42.12    pi-c pi-c.local
+        line: "{{ pi2.ipv4.addr }}    pi-2 pi-2.local"
         path: /etc/hosts
 
 - name: Append cgroup settings to cmdline.txt
@@ -39,16 +39,3 @@
       ansible.builtin.reboot:
         reboot_timeout: 600
       when: cmdline_check.changed
-
-- name: Install docker.io
-  hosts: rpi-cluster
-  become: yes
-  tasks:
-    - name: Install docker.io
-      ansible.builtin.apt:
-        name: docker.io
-        state: present
-        update_cache: yes
-
-
-      
