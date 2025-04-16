@@ -18,8 +18,6 @@ releases:
 #            enabled: true
 #            adminEmail: csl4jc@gmail.com
 #            serviceAccountJson: {{ exec "op" (list "read" "op://Private/4vowpk2pjbbegc4wnwrz6s4mg4/service-account-json") | quote }}
-          emailDomains:
-            - csl4jc@gmail.com # Only allow your email
           whitelistDomains:
             - .home.planetlauritsen.com
       - extraVolumes:
@@ -36,14 +34,13 @@ releases:
           - --set-authorization-header=true
           - --pass-access-token=true
           - --whitelist-domain=*.home.planetlauritsen.com
-          - --show-debug-on-error=true
           - --standard-logging=true
           - --auth-logging=true
           - --request-logging=true
           - --provider=google
           - --authenticated-emails-file=/etc/oauth2-proxy/allowed-emails.txt
-
-
+          - --email-domain=
+          - --show-debug-on-error
       - ingress:
           enabled: true
           tls: true
