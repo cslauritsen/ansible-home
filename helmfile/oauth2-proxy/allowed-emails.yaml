@@ -1,0 +1,9 @@
+apiVersion: v1
+data:
+  allowed-emails.txt: |-
+    csl4jc@gmail.com
+    kimberlyslauritsen@gmail.com
+kind: ConfigMap
+metadata:
+  name: allowed-emails
+  namespace: longhorn-system

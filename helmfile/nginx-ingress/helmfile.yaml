@@ -1,23 +1,30 @@
 repositories:
-  ingress-nginx: https://kubernetes.github.io/ingress-nginx
+  - name: ingress-nginx
+    url: https://kubernetes.github.io/ingress-nginx
 releases:
   - name: ingress-nginx
     chart: ingress-nginx/ingress-nginx
-    version: 2.0.1
+    version: 4.12.1
     namespace: ingress-nginx
+    kubeContext: rpi
     createNamespace: true
     values:
       - controller:
-          hostNetwork: true
-          dnsPolicy: ClusterFirstWithHostNet
-          enableSnippets: true
-          kind: daemonset
+          image:
+            # supposed to be a best practice but needs more configuration i guess since it crashes on startup
+            readOnlyRootFilesystem: false
+
+          securityContext:
+#            capabilities:
+#              add: []
+#          hostNetwork: true
+#          dnsPolicy: ClusterFirstWithHostNet
+          allowSnippetAnnotations: true
+          kind: Deployment
           service:
             enabled: true
-            loadBalancerIP: 192.168.1.8
+#            loadBalancerIP: 192.168.1.8
+#            externalIPs:
+#              - 192.168.1.8
             annotations:
               metallb.universe.tf/allow-shared-ip: 192.168.1.8
-          securityContext:
-            capabilities:
-              add:
-                - NET_BIND_SERVICE

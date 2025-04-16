@@ -5,13 +5,24 @@ metadata:
   namespace: longhorn-system
   annotations:
     # type of authentication
-    nginx.ingress.kubernetes.io/auth-type: basic
+#    nginx.ingress.kubernetes.io/auth-type: basic
     # prevent the controller from redirecting (308) to HTTPS
     nginx.ingress.kubernetes.io/ssl-redirect: 'false'
     # name of the secret that contains the user/password definitions
 #    nginx.ingress.kubernetes.io/auth-secret: basic-auth
-#    # message to display with an appropriate context why the authentication is required
+##    # message to display with an appropriate context why the authentication is required
 #    nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required '
+    # alternatively, use oauth2 proxy
+    nginx.ingress.kubernetes.io/auth-url: "https://oauth2-proxy.home.planetlauritsen.com/oauth2/auth"
+    nginx.ingress.kubernetes.io/auth-signin: "https://oauth2-proxy.home.planetlauritsen.com/oauth2/start?rd=https://$host$request_uri"
+
+    #    nginx.ingress.kubernetes.io/configuration-snippet: |
+#      auth_request_set $name_upstream_1 $upstream_cookie_name_1;
+#      access_by_lua_block {
+#        if ngx.var.name_upstream_1 ~= "" then
+#        ngx.header["Set-Cookie"] = "name_1=" .. ngx.var.name_upstream_1 .. ngx.var.auth_cookie:match("(; .*)")
+#        end
+#      }
     # custom max body size for file uploading like backing image uploading
     nginx.ingress.kubernetes.io/proxy-body-size: 10000m
 
