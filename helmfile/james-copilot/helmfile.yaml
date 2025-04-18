@@ -1,0 +1,13 @@
+releases:
+    - name: james
+      chart: ./chart/
+#        kubeContext: rpi
+      namespace: james
+      createNamespace: true
+      values:
+      - james:
+          secret: {}
+          persistence:
+              storageClass: local-path
+              enabled: true
+              size: 1Gi

@@ -1,0 +1,168 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: mail
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: maildata
+  namespace: mail
+spec:
+  storageClassName: longhorn
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postfix-config
+  namespace: mail
+data:
+  main.cf: |
+    myhostname = mail.local
+    mydomain = local
+    myorigin = $mydomain
+    inet_interfaces = all
+    inet_protocols = ipv4
+    mydestination = $myhostname, localhost.$mydomain, localhost
+    home_mailbox = Maildir/
+    mailbox_command =
+    local_transport = local
+    virtual_alias_maps = hash:/etc/postfix/virtual
+
+  virtual: |
+    user1@local user1
+    user2@local user2
+
+  start.sh: |
+    #!/bin/sh
+    # Start postfix
+    postfix start-fg
+#---
+#apiVersion: v1
+#kind: ConfigMap
+#metadata:
+#  name: dovecot-config
+#  namespace: mail
+#data:
+#  dovecot.conf: |
+#    dovecot_config_version = 2.4.1
+#    mail_location = maildir:/var/mail/vhosts/%d/%n
+#    userdb {
+#      driver = passwd
+#    }
+#    passdb {
+#      driver = pam
+#    }
+#    protocols = imap
+#
+#    service imap-login {
+#      inet_listener imap {
+#        port = 143
+#      }
+#    }
+#
+#    service auth {
+#      unix_listener /var/spool/postfix/private/auth {
+#        mode = 0660
+#        user = postfix
+#        group = postfix
+#      }
+#    }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mailserver
+  namespace: mail
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mailserver
+  template:
+    metadata:
+      labels:
+        app: mailserver
+    spec:
+      initContainers:
+        - name: init-postfix
+          image: boky/postfix
+          command:
+            - "/bin/sh"
+            - "-c"
+            - |
+              # Copy Postfix config from /etc/postfix to temporary emptyDir
+              cp -r /etc/postfix/* /tmp/postfix-config/
+          volumeMounts:
+            - name: postfix-config-temp
+              mountPath: /tmp/postfix-config
+
+      containers:
+        - name: postfix
+          image: boky/postfix
+          command: ["/bin/sh", "/config/start.sh"]
+          volumeMounts:
+            - name: maildata
+              mountPath: /var/mail
+            - name: postfix-config-temp
+              mountPath: /etc/postfix
+            - name: postfix-config
+              mountPath: /config
+              readOnly: true
+            - name: dovecot-socket
+              mountPath: /var/spool/postfix/private
+
+        - name: dovecot
+          image: dovecot/dovecot
+          volumeMounts:
+            - name: maildata
+              mountPath: /srv/vmail
+            - name: dovecot-socket
+              mountPath: /var/spool/postfix/private
+
+
+      volumes:
+        - name: maildata
+          persistentVolumeClaim:
+            claimName: maildata
+        - name: postfix-config
+          configMap:
+            name: postfix-config
+            items:
+              - key: main.cf
+                path: main.cf
+              - key: virtual
+                path: virtual
+              - key: start.sh
+                path: start.sh
+        - name: postfix-config-temp
+          emptyDir: {}
+        - name: dovecot-config
+          configMap:
+            name: dovecot-config
+            items:
+              - key: dovecot.conf
+                path: dovecot.conf
+        - name: dovecot-socket
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mailserver
+  namespace: mail
+spec:
+  selector:
+    app: mailserver
+  ports:
+    - name: smtp
+      port: 25
+      targetPort: 25
+    - name: imap
+      port: 143
+      targetPort: 143

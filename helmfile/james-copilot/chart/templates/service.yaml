@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "apache-james.fullname" . }}
+  labels:
+    app: {{ include "apache-james.name" . }}
+spec:
+  type: {{ .Values.james.service.type }}
+  ports:
+    - port: {{ .Values.james.service.port }}
+      targetPort: 8080
+      protocol: TCP
+      name: http
+  selector:
+    app: {{ include "apache-james.name" . }}

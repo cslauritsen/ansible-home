@@ -2,3 +2,4 @@ logs/
 secrets/
 *kubeconfig*
 *delme*
+*.tgz

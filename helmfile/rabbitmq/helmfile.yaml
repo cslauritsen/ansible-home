@@ -1,0 +1,12 @@
+releases:
+  - name: rabbitmq
+    namespace: rabbitmq
+    createNamespace: true
+    kubeContext: rpi
+    chart: oci://registry-1.docker.io/bitnamicharts/rabbitmq
+    version: 15.5.3
+    values:
+      - persistence:
+          storageClass: longhorn
+          enabled: true
+          size: 1Gi

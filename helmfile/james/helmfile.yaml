@@ -1,0 +1,9 @@
+releases:
+  - name: james
+    chart: /Users/csl04r/repos/apache/james-project/server/apps/distributed-app/helm-chart/james
+    kubeContext: rpi
+    namespace: james
+    createNamespace: true
+    values:
+      - james:
+          secret: {}

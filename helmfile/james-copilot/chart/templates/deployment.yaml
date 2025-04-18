@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "apache-james.fullname" . }}
+  labels:
+    app: {{ include "apache-james.name" . }}
+spec:
+  replicas: {{ .Values.james.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "apache-james.name" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "apache-james.name" . }}
+    spec:
+      containers:
+        - name: apache-james
+          image: {{ .Values.james.image }}
+          ports:
+            - containerPort: {{ .Values.james.service.port }}
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://{{ .Release.Name }}-postgresql:5432/{{ .Values.postgresql.postgresqlDatabase }}
+            - name: SPRING_DATASOURCE_USERNAME
+              value: {{ .Values.postgresql.postgresqlUsername }}
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: {{ .Values.postgresql.postgresqlPassword }}
+            - name: S3_ENDPOINT
+              value: http://{{ .Release.Name }}-minio:9000
+            - name: S3_ACCESS_KEY
+              value: {{ .Values.minio.accessKey }}
+            - name: S3_SECRET_KEY
+              value: {{ .Values.minio.secretKey }}
