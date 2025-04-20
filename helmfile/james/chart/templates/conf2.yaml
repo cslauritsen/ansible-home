@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: conf-directory2
+data:
+{{- $files := .Files.Glob "config/*" }}
+{{- range $path, $file := $files }}
+  {{ $path | base }}: |
+{{ $.Files.Get $path | indent 4 }}
+{{- end }}

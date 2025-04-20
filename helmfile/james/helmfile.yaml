@@ -1,9 +1,24 @@
 releases:
+#  - name: secrets
+#    namespace: james
+#    chart: ./secrets
+#    kubeContext: rpi
   - name: james
-    chart: /Users/csl04r/repos/apache/james-project/server/apps/distributed-app/helm-chart/james
+    chart: ./chart
     kubeContext: rpi
     namespace: james
     createNamespace: true
     values:
+#      - cassandra:
+#          password: {{ exec "op" (list "read" "--no-newline" "op://Private/og4qrebkvathglu6mgggr6a7py/password") | quote }}
       - james:
           secret: {}
+      - postgresql:
+          auth:
+            username: james
+            password: {{ exec "op" (list "read" "--no-newline" "op://Private/ojudof77k7b25wcwrvr3pf2uwq/password") | quote }}
+            postgresPassword: {{ exec "op" (list "read" "--no-newline" "op://Private/ojudof77k7b25wcwrvr3pf2uwq/password") | quote }}
+      - opensearch:
+          extraEnvs:
+            - name: OPENSEARCH_INITIAL_ADMIN_PASSWORD
+              value: {{ exec "op" (list "read" "--no-newline" "op://Private/ansy4u3jga3liqvjakgtb22shy/password") | quote}}
