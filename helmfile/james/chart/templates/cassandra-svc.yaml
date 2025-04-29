@@ -1,8 +1,0 @@
-apiVersion: v1
-kind: Service
-metadata:
-  name: cassandra
-  namespace: james
-spec:
-  type: ExternalName
-  externalName: cassie-cassandra-headless.cassie.svc.cluster.local.

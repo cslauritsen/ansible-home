@@ -1,0 +1,23 @@
+repositories:
+  - name: squid
+    url: https://sergiotocalini.github.io/helm-charts
+releases:
+  - name: squid
+    kubeContext: rpi
+    labels:
+      cat: main
+    namespace: squid
+    createNamespace: true
+    chart: squid/squid
+    values:
+      - ./values-default.yaml
+      - pvc:
+          storageClassName: "longhorn"
+  - name: squid-extras
+    chart: ./extras
+    kubeContext: rpi
+    labels:
+      cat: extras
+    namespace: squid
+    createNamespace: true
+

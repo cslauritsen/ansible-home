@@ -1,3 +1,4 @@
+{{- $fullname := include "james.fullname" . }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -49,6 +50,8 @@ spec:
           {{- end }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+            - --generate-keystore
           ports:
             - name: http
               containerPort: 80
@@ -89,6 +92,11 @@ spec:
           volumeMounts:
             - name: conf-dir
               mountPath: /root/conf
+          {{- if .Values.certManager }}
+            - name: james-tls
+              mountPath: /root/conf/tls
+              readOnly: true
+          {{- end }}
           {{- with .Values.volumeMounts }}
             {{- range . }}
             {{- toYaml . | nindent 12 }}
@@ -99,8 +107,13 @@ spec:
         - name: conf-dir
           emptyDir: {}
         - name: conf-templ
-          configMap:
-            name: conf-directory
+          secret:
+            secretName: {{ $fullname }}-conf-directory
+      {{- if .Values.certManager }}
+        - name: james-tls
+          secret:
+            secretName: {{ $fullname }}-tls-secret
+      {{- end }}
       {{- with .Values.volumes }}
         {{- range . }}
         {{- toYaml . | nindent 8 }}

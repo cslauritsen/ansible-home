@@ -1,0 +1,32 @@
+{{- if (.Values.loadBalancer).enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "james.fullname" . }}-lb
+  annotations:
+    metallb.universe.tf/allow-shared-ip: {{ .Values.loadBalancer.ip | quote }}
+spec:
+  type: LoadBalancer
+  loadBalancerIP: {{ .Values.loadBalancerIP | quote }}
+  selector:
+    {{- include "james.selectorLabels" . | nindent 4 }}
+  ports:
+    - name: imap
+      protocol: TCP
+      port: 143
+    - name: imaps
+      protocol: TCP
+      port: 993
+    - name: pop3
+      protocol: TCP
+      port: 110
+    - name: smtp
+      protocol: TCP
+      port: 25
+    - name: smtpauth
+      protocol: TCP
+      port: 587
+    - name: smtps
+      protocol: TCP
+      port: 465
+  {{- end }}

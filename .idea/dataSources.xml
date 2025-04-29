@@ -1,37 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="rpi" uuid="92571a98-cc07-4b70-b6b2-ceb25218c61e">
-      <driver-ref>cassandra</driver-ref>
-      <synchronize>true</synchronize>
-      <jdbc-driver>com.ing.data.cassandra.jdbc.CassandraDriver</jdbc-driver>
-      <jdbc-url>jdbc:cassandra://192.168.1.9:9042</jdbc-url>
-      <jdbc-additional-properties>
-        <property name="com.intellij.clouds.kubernetes.db.host.port" />
-        <property name="com.intellij.clouds.kubernetes.db.enabled" value="false" />
-        <property name="com.intellij.clouds.kubernetes.db.resource.type" value="Deployment" />
-        <property name="com.intellij.clouds.kubernetes.db.container.port" />
-      </jdbc-additional-properties>
-      <working-dir>$ProjectFileDir$</working-dir>
-    </data-source>
-    <data-source source="LOCAL" name="@localhost" uuid="759f922c-b011-4763-bb00-fbcff975c1f9">
-      <driver-ref>cassandra</driver-ref>
-      <synchronize>true</synchronize>
-      <jdbc-driver>com.ing.data.cassandra.jdbc.CassandraDriver</jdbc-driver>
-      <jdbc-url>jdbc:cassandra://localhost:9042</jdbc-url>
-      <jdbc-additional-properties>
-        <property name="com.intellij.clouds.kubernetes.db.host.port" />
-        <property name="com.intellij.clouds.kubernetes.db.enabled" value="false" />
-        <property name="com.intellij.clouds.kubernetes.db.resource.type" value="Deployment" />
-        <property name="com.intellij.clouds.kubernetes.db.container.port" />
-      </jdbc-additional-properties>
-      <working-dir>$ProjectFileDir$</working-dir>
-    </data-source>
-    <data-source source="LOCAL" name="james rpi" uuid="f23b3f1c-06f9-4eb3-9bd6-2de4bf0630bf">
+    <data-source source="LOCAL" name="james - rpi" uuid="186836bb-5df9-4fe2-8eeb-9d537be7c410">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
-      <jdbc-url>jdbc:postgresql://192.168.1.9:5432/postgres</jdbc-url>
+      <jdbc-url>jdbc:postgresql://192.168.1.9:5432/james</jdbc-url>
       <jdbc-additional-properties>
         <property name="com.intellij.clouds.kubernetes.db.host.port" />
         <property name="com.intellij.clouds.kubernetes.db.enabled" value="false" />

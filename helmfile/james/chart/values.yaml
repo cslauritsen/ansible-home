@@ -87,13 +87,22 @@ resources: {}
 
 # This is to setup the liveness and readiness probes more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
 livenessProbe:
+#  tcpSocket:
+#    port: 25
+#  initialDelaySeconds: 10
+#  periodSeconds: 10
+#  timeoutSeconds: 1
+#  successThreshold: 1
+#  failureThreshold: 3
+
   httpGet:
-    path: /
-    port: http
+    path: /domains
+    port: webadmin
+
 readinessProbe:
   httpGet:
-    path: /
-    port: http
+    path: /domains
+    port: webadmin
 
 # This section is for setting up autoscaling more information can be found here: https://kubernetes.io/docs/concepts/workloads/autoscaling/
 autoscaling:
@@ -135,3 +144,21 @@ opensearch:
     replicaCount: 1
   data:
     replicaCount: 1
+certManager: true
+loadBalancer:
+  enabled: true
+  ip: 192.168.1.8
+
+blobStore:
+  implementation: s3
+  deduplication: true
+  s3:
+    bucketName: my-special-bucket
+    region: us-east-2
+#    accessKey: *******
+#    secretKey: *******
+  encryption:
+    enabled: false
+    alg: PBKDF2WithHmacSHA512
+  # salt: *****
+  # password: ************************************

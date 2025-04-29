@@ -28,3 +28,4 @@ releases:
 #              - 192.168.1.8
             annotations:
               metallb.universe.tf/allow-shared-ip: 192.168.1.8
+              ad.datadoghq.com/controller.logs: '[{"source": "nginx", "service": "ingress-nginx"}]'

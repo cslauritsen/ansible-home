@@ -1,0 +1,26 @@
+releases:
+  - name: jim-bridger
+    chart: oci://docker.io/cslauritsen/jim-bridger-chart
+    version: 0.1.4
+    kubeContext: rpi
+    labels:
+      cat: main
+    namespace: james
+    createNamespace: false
+    values:
+      - smtpHost: james
+      - preSharedSecret: {{ exec "op" (list "read" "--no-newline" "op://Private/y26yrloe232cpc5cngcmjz35ty/password") }}
+      - ingress:
+          enabled: true
+          className: nginx
+          annotations:
+            cert-manager.io/cluster-issuer: letsencrypt-dns
+          hosts:
+            - host: jim-bridger.home.planetlauritsen.com
+              paths:
+                - path: /
+                  pathType: Prefix
+          tls:
+            - secretName: jim-bridger-tls
+              hosts:
+                - jim-bridger.home.planetlauritsen.com

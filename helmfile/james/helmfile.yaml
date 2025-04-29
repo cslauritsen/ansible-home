@@ -9,15 +9,30 @@ releases:
     namespace: james
     createNamespace: true
     values:
+      - database:
+          password: {{ exec "op" (list "read" "--no-newline" "op://Private/ojudof77k7b25wcwrvr3pf2uwq/password") | quote }}
 #      - cassandra:
 #          password: {{ exec "op" (list "read" "--no-newline" "op://Private/og4qrebkvathglu6mgggr6a7py/password") | quote }}
       - james:
           secret: {}
       - postgresql:
           auth:
+            database: james
             username: james
             password: {{ exec "op" (list "read" "--no-newline" "op://Private/ojudof77k7b25wcwrvr3pf2uwq/password") | quote }}
             postgresPassword: {{ exec "op" (list "read" "--no-newline" "op://Private/ojudof77k7b25wcwrvr3pf2uwq/password") | quote }}
+      - blobStore:
+          implementation: s3
+          deduplication: true
+          s3:
+            region: us-east-2
+            bucketName: planetlauritsen-james-blobstore
+            accessKey: {{ exec "op" (list "read" "--no-newline" "op://Private/sl5kk7ydfsxrduge2rurceot6i/access-key") | quote }}
+            secretKey: {{ exec "op" (list "read" "--no-newline" "op://Private/sl5kk7ydfsxrduge2rurceot6i/secret-key") | quote }}
+          encryption:
+            enabled: true
+            salt: {{ exec "op" (list "read" "--no-newline" "op://Private/sl5kk7ydfsxrduge2rurceot6i/aes-salt") | quote }}
+            password: {{ exec "op" (list "read" "--no-newline" "op://Private/sl5kk7ydfsxrduge2rurceot6i/aes-password") | quote }}
       - opensearch:
           extraEnvs:
             - name: OPENSEARCH_INITIAL_ADMIN_PASSWORD
