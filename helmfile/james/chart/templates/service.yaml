@@ -7,9 +7,23 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: http
+    - name: imap
       protocol: TCP
-      name: http
+      port: 143
+    - name: imaps
+      protocol: TCP
+      port: 993
+    - name: pop3
+      protocol: TCP
+      port: 110
+    - name: smtp
+      protocol: TCP
+      port: 25
+    - name: smtpauth
+      protocol: TCP
+      port: 587
+    - name: smtps
+      protocol: TCP
+      port: 465
   selector:
     {{- include "james.selectorLabels" . | nindent 4 }}

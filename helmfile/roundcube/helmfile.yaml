@@ -1,0 +1,11 @@
+releases:
+  - name: roundcube
+    namespace: roundcube
+    chart: ./chart
+    kubeContext: rpi
+    values:
+      - pvc:
+          storageClassName: longhorn
+      - env:
+          ROUNDCUBEMAIL_DEFAULT_HOST: ssl://james.james
+          ROUNDCUBEMAIL_SMTP_SERVER: tls://james.james
