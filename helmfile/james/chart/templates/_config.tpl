@@ -494,7 +494,7 @@ lmtpserver.xml: |
 
 logback.xml: |
   <?xml version="1.0" encoding="UTF-8"?>
-  <configuration>
+  <configuration scan="true" scanPeriod="30 seconds">
 
           <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
                   <resetJUL>true</resetJUL>
@@ -507,30 +507,14 @@ logback.xml: |
                   </encoder>
           </appender>
 
-          <appender name="LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-                  <file>/logs/james.log</file>
-                  <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-                      <fileNamePattern>/logs/james.%i.log.tar.gz</fileNamePattern>
-                      <minIndex>1</minIndex>
-                      <maxIndex>3</maxIndex>
-                  </rollingPolicy>
-
-                  <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
-                      <maxFileSize>100MB</maxFileSize>
-                  </triggeringPolicy>
-
-                  <encoder>
-                          <pattern>%d{HH:mm:ss.SSS} [%-5level] %logger{15} - %msg%n%rEx</pattern>
-                          <immediateFlush>false</immediateFlush>
-                  </encoder>
-          </appender>
           <root level="WARN">
                   <appender-ref ref="CONSOLE" />
-                  <appender-ref ref="LOG_FILE" />
           </root>
 
           <logger name="org.apache.james" level="INFO" />
-
+          <logger name="org.apache.james.webadmin.mdc" level="WARN" />
+          <logger name="org.apache.james.imapserver" level="DEBUG" />
+          <logger name="org.apache.james.transport.mailets.RemoteDelivery" level="DEBUG"/>
   </configuration>
 
 mailetcontainer.xml: |
@@ -633,6 +617,25 @@ mailetcontainer.xml: |
           </processor>
 
           <processor state="relay" enableJmx="true">
+          {{- if .Values.ses }}
+              <mailet match="All" class="RemoteDelivery">
+                  <outgoingQueue>outgoing</outgoingQueue>
+                  <!-- <useSSL>true</useSSL> --> <!-- useSSL for port 465, or startTLS if false on port 587 -->
+                  <startTLS>true</startTLS> <!-- StartTLS is preferred with port 587 -->
+                  <authRequired>true</authRequired>
+                  <heloName>planetlauritsen.com</heloName>
+                  <gateway>{{.Values.ses.host}}</gateway>
+                  <gatewayPort>587</gatewayPort>
+                  <gatewayUsername>{{.Values.ses.username}}</gatewayUsername>
+                  <gatewayPassword>{{.Values.ses.password}}</gatewayPassword>
+                  <bounceProcessor>bounces</bounceProcessor>
+                  <delayTime>5000, 100000, 500000</delayTime>
+                  <maxRetries>3</maxRetries>
+                  <maxDnsProblemRetries>0</maxDnsProblemRetries>
+                  <debug>true</debug>
+                  <verifyServerIdentity>true</verifyServerIdentity>
+               </mailet>
+              {{- else }}
               <mailet match="All" class="RemoteDelivery">
                   <outgoingQueue>outgoing</outgoingQueue>
                   <delayTime>5000, 100000, 500000</delayTime>
@@ -642,6 +645,7 @@ mailetcontainer.xml: |
                   <sendpartial>true</sendpartial>
                   <bounceProcessor>bounces</bounceProcessor>
               </mailet>
+               {{- end }}
           </processor>
 
           <processor state="local-address-error" enableJmx="true">

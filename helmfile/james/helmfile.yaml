@@ -15,6 +15,10 @@ releases:
 #          password: {{ exec "op" (list "read" "--no-newline" "op://Private/og4qrebkvathglu6mgggr6a7py/password") | quote }}
       - james:
           secret: {}
+      - ses:
+          host: email-smtp.us-east-2.amazonaws.com
+          username: {{ exec "op" (list "read" "--no-newline" "op://Shared/d2skk4dfae5mrboe4mhe3lc7um/username") | quote }}
+          password: {{ exec "op" (list "read" "--no-newline" "op://Shared/d2skk4dfae5mrboe4mhe3lc7um/password") | quote }}
       - postgresql:
           auth:
             database: james
