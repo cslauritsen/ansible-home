@@ -9,3 +9,17 @@ releases:
       - env:
           ROUNDCUBEMAIL_DEFAULT_HOST: ssl://james.james
           ROUNDCUBEMAIL_SMTP_SERVER: tls://james.james
+      - ingress:
+          enabled: true
+          className: nginx
+          annotations:
+            cert-manager.io/cluster-issuer: letsencrypt-dns
+          hosts:
+            - host: mail.home.planetlauritsen.com
+              paths:
+                - path: /
+                  pathType: Prefix
+          tls:
+            - secretName: roundcube-tls
+              hosts:
+                - mail.home.planetlauritsen.com
