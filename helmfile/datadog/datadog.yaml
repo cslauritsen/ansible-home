@@ -31,6 +31,8 @@ spec:
     logCollection:
       enabled: true
       containerCollectAll: true
+    eventCollection:
+      collectKubernetesEvents: true
     asm:
       threats:
         enabled: true

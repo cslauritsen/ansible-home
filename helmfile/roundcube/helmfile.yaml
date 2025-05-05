@@ -7,8 +7,8 @@ releases:
       - pvc:
           storageClassName: longhorn
       - env:
-          ROUNDCUBEMAIL_DEFAULT_HOST: ssl://james.james
-          ROUNDCUBEMAIL_SMTP_SERVER: tls://james.james
+          ROUNDCUBEMAIL_DEFAULT_HOST: james.james
+          ROUNDCUBEMAIL_SMTP_SERVER: james.james
       - ingress:
           enabled: true
           className: nginx

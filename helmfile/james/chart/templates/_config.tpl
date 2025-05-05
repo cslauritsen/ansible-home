@@ -495,16 +495,14 @@ lmtpserver.xml: |
 logback.xml: |
   <?xml version="1.0" encoding="UTF-8"?>
   <configuration scan="true" scanPeriod="30 seconds">
-
           <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
-                  <resetJUL>true</resetJUL>
+            <resetJUL>true</resetJUL>
           </contextListener>
-
+          <!-- in kubernetes, produce json output -->
           <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-                  <encoder>
-                          <pattern>%d{HH:mm:ss.SSS} %highlight([%-5level]) %logger{15} - %msg%n%rEx</pattern>
-                          <immediateFlush>false</immediateFlush>
-                  </encoder>
+            <encoder class="ch.qos.logback.classic.encoder.JsonEncoder">
+              <withFormattedMessage>true</withFormattedMessage>
+            </encoder>
           </appender>
 
           <root level="WARN">
@@ -940,28 +938,7 @@ search.properties: |
 
 smtpserver.xml: |
   <?xml version="1.0"?>
-
-  <!--
-    Licensed to the Apache Software Foundation (ASF) under one
-    or more contributor license agreements.  See the NOTICE file
-    distributed with this work for additional information
-    regarding copyright ownership.  The ASF licenses this file
-    to you under the Apache License, Version 2.0 (the
-    "License"); you may not use this file except in compliance
-    with the License.  You may obtain a copy of the License at
-
-      http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing,
-    software distributed under the License is distributed on an
-    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-    KIND, either express or implied.  See the License for the
-    specific language governing permissions and limitations
-    under the License.
-   -->
-
   <!-- Read https://james.apache.org/server/config-smtp-lmtp.html#SMTP_Configuration for further details -->
-
   <smtpservers>
       <smtpserver enabled="true">
           <jmxName>smtpserver-global</jmxName>
@@ -997,7 +974,7 @@ smtpserver.xml: |
               <requireSSL>false</requireSSL>
               <plainAuthEnabled>true</plainAuthEnabled>
           </auth>
-          <authorizedAddresses>192.168.0.0/16</authorizedAddresses>
+          <authorizedAddresses>10.*</authorizedAddresses>
           <verifyIdentity>true</verifyIdentity>
           <maxmessagesize>0</maxmessagesize>
           <addressBracketsEnforcement>true</addressBracketsEnforcement>
@@ -1049,7 +1026,7 @@ smtpserver.xml: |
               </oidc>
               -->
           </auth>
-          <authorizedAddresses>192.168.0.0/16</authorizedAddresses>
+          <authorizedAddresses>10.*</authorizedAddresses>
           <verifyIdentity>true</verifyIdentity>
           <maxmessagesize>0</maxmessagesize>
           <addressBracketsEnforcement>true</addressBracketsEnforcement>
@@ -1101,11 +1078,11 @@ smtpserver.xml: |
               </oidc>
               -->
           </auth>
-          <authorizedAddresses>192.168.0.0/16</authorizedAddresses>
-          <verifyIdentity>true</verifyIdentity>
+          <authorizedAddresses>10.*</authorizedAddresses>
+          <verifyIdentity>disabled</verifyIdentity>
           <maxmessagesize>0</maxmessagesize>
           <addressBracketsEnforcement>true</addressBracketsEnforcement>
-          <smtpGreeting>Apache JAMES awesome SMTP Server</smtpGreeting>
+          <smtpGreeting>Unauthorized users will be prosecuted</smtpGreeting>
           <handlerchain>
               <handler class="org.apache.james.smtpserver.fastfail.ValidRcptHandler"/>
               <handler class="org.apache.james.smtpserver.CoreCmdHandlerLoader"/>
