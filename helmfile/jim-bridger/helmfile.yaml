@@ -1,15 +1,16 @@
 releases:
   - name: jim-bridger
     chart: oci://docker.io/cslauritsen/jim-bridger-chart
-    version: 0.1.4
+    version: 0.1.7
     kubeContext: rpi
     labels:
       cat: main
     namespace: james
     createNamespace: false
     values:
-      - smtpHost: james
-      - preSharedSecret: {{ exec "op" (list "read" "--no-newline" "op://Private/y26yrloe232cpc5cngcmjz35ty/password") }}
+      - fullnameOverride: jim-bridger
+      - smtp:
+          host: james
       - ingress:
           enabled: true
           className: nginx
