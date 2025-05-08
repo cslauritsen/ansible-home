@@ -1,0 +1,8 @@
+{{- if eq (.Values.blobStore).implementation "file" }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ template "james.fullname" . }}-blobstore
+spec:
+  {{- toYaml ((.Values.blobStore).file).pvcSpec | nindent 2 }}
+{{- end }}

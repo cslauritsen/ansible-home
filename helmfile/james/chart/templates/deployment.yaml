@@ -96,6 +96,11 @@ spec:
           volumeMounts:
             - name: conf-dir
               mountPath: /root/conf
+            {{- if eq (.Values.blobStore).implementation "file" }}
+            - name: blobstore
+              # FileBlobStoreDAO.java#63
+              mountPath: /root/var/blob
+            {{- end }}
           {{- if .Values.certManager }}
             - name: james-tls
               mountPath: /root/conf/tls
@@ -117,6 +122,11 @@ spec:
         - name: james-tls
           secret:
             secretName: {{ $fullname }}-tls-secret
+      {{- end }}
+      {{- if eq (.Values.blobStore).implementation "file" }}
+        - name: blobstore
+          persistentVolumeClaim:
+            claimName: {{ $fullname }}-blobstore
       {{- end }}
       {{- with .Values.volumes }}
         {{- range . }}

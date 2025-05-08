@@ -45,6 +45,7 @@ blob.properties: |
     {{- end }}
 {{- end }}
 
+{{- if eq .implementation "s3" }}
     {{- with .s3 }}
   objectstorage.namespace={{required "S3 bucket name is required" .bucketName }}
   objectstorage.s3.endPoint=https://s3.{{ required "S3 region is required" .region }}.amazonaws.com
@@ -52,6 +53,7 @@ blob.properties: |
   objectstorage.s3.accessKeyId={{ required "S3 accessKey is required" .accessKey }}
   objectstorage.s3.secretKey={{ required "S3 secretKey is required" .secretKey }}
     {{- end }}
+ {{- end }}
   # ============================================ Blobs Exporting ==============================================
   # Read https://james.apache.org/server/config-blob-export.html for further details
 

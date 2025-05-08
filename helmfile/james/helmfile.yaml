@@ -26,13 +26,21 @@ releases:
             password: {{ exec "op" (list "read" "--no-newline" "op://Private/ojudof77k7b25wcwrvr3pf2uwq/password") | quote }}
             postgresPassword: {{ exec "op" (list "read" "--no-newline" "op://Private/ojudof77k7b25wcwrvr3pf2uwq/password") | quote }}
       - blobStore:
-          implementation: s3
+          implementation: file
           deduplication: true
-          s3:
-            region: us-east-2
-            bucketName: planetlauritsen-james-blobstore
-            accessKey: {{ exec "op" (list "read" "--no-newline" "op://Private/sl5kk7ydfsxrduge2rurceot6i/access-key") | quote }}
-            secretKey: {{ exec "op" (list "read" "--no-newline" "op://Private/sl5kk7ydfsxrduge2rurceot6i/secret-key") | quote }}
+          file:
+            pvcSpec:
+              storageClassName: longhorn
+              accessModes:
+                - ReadWriteMany
+              resources:
+                requests:
+                  storage: 2Gi
+#          s3:
+#            region: us-east-2
+#            bucketName: planetlauritsen-james-blobstore
+#            accessKey: {{ exec "op" (list "read" "--no-newline" "op://Private/sl5kk7ydfsxrduge2rurceot6i/access-key") | quote }}
+#            secretKey: {{ exec "op" (list "read" "--no-newline" "op://Private/sl5kk7ydfsxrduge2rurceot6i/secret-key") | quote }}
           encryption:
             enabled: true
             salt: {{ exec "op" (list "read" "--no-newline" "op://Private/sl5kk7ydfsxrduge2rurceot6i/aes-salt") | quote }}
