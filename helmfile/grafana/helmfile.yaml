@@ -13,46 +13,28 @@ releases:
           configMap:
             content: |
               // Write your Alloy config here:
-              logging {
-                level = "info"
-                format = "logfmt"
-              }
-              local.file_match "node_logs" {
-                path_targets = [{"__path__" = "/var/log/*.log"}]
-                sync_period = "5s"
-                node_name = sys.env("HOSTNAME")
-                cluster   = "rpi"
-              }
-              //loki.source.file "log_scrape" {
-              //  targets    = local.file_match.local_files.targets
-              //  forward_to = [loki.process.filter_logs.receiver]
-              //  tail_from_end = true
-              //}
-              loki.process "filter_logs" {
-                stage.drop {
-                  source = ""
-                  expression  = ".*Connection closed by authenticating user root"
-                  drop_counter_reason = "noisy"
-                }
-                forward_to = [loki.write.grafana_loki.receiver]
-              }
-
               loki.write "grafana_loki" {
-              endpoint {
-                  url = "https://logs-prod-036.grafana.net/loki/api/v1/push"
+                endpoint {
+                    url = "https://logs-prod-036.grafana.net/loki/api/v1/push"
+                    basic_auth {
+                      username = {{ exec "op" (list "read" "--no-newline" "op://Private/n4b33z3lps73pnkdmyawdxfdoq/username") | quote }}
+                      password = {{ exec "op" (list "read" "--no-newline" "op://Private/n4b33z3lps73pnkdmyawdxfdoq/password") | quote }}
+                    }
+                 }
+              }
+              prometheus.remote_write "grafanacloud" {
+                endpoint {
+                url = "https://prometheus-prod-56-prod-us-east-2.grafana.net/api/prom/push"
                   basic_auth {
-                    username = {{ exec "op" (list "read" "--no-newline" "op://Private/n4b33z3lps73pnkdmyawdxfdoq/username") | quote }}
+                    username = "2419169"
                     password = {{ exec "op" (list "read" "--no-newline" "op://Private/n4b33z3lps73pnkdmyawdxfdoq/password") | quote }}
                   }
                 }
               }
-              // loki.source.file reads log entries from files and forwards them to other loki.* components.
-              // You can specify multiple loki.source.file components by giving them different labels.
-              loki.source.file "node_logs" {
-                targets    = local.file_match.node_logs.targets
-                forward_to = [loki.write.grafana_loki.receiver]
+              logging {
+                  level = "info"
+                  format = "logfmt"
               }
-
               // discovery.kubernetes allows you to find scrape targets from Kubernetes resources.
               // It watches cluster state and ensures targets are continually synced with what is currently running in your cluster.
               discovery.kubernetes "pod" {
@@ -138,32 +120,7 @@ releases:
                 }
                 forward_to = [loki.write.grafana_loki.receiver]
               }
-              
-              // loki.source.kubernetes_events tails events from the Kubernetes API and converts them
-              // into log lines to forward to other Loki components.
-              loki.source.kubernetes_events "cluster_events" {
-                job_name   = "integrations/kubernetes/eventhandler"
-                log_format = "logfmt"
-                forward_to = [
-                  loki.process.cluster_events.receiver,
-                ]
+              prometheus.scrape "prom_scrape" {
+                targets    = discovery.kubernetes.pod.targets
+                forward_to = [prometheus.remote_write.grafanacloud.receiver]
               }
-              
-              // loki.process receives log entries from other loki components, applies one or more processing stages,
-              // and forwards the results to the list of receivers in the component's arguments.
-              loki.process "cluster_events" {
-                forward_to = [loki.write.grafana_loki.receiver]
-              
-                stage.static_labels {
-                  values = {
-                    cluster = "rpi",
-                  }
-                }
-              
-                stage.labels {
-                  values = {
-                    kubernetes_cluster_events = "job",
-                  }
-                }
-              }
-
