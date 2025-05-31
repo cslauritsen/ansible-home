@@ -1,0 +1,14 @@
+---
+
+- name: Install docker.io
+  hosts: rpi-cluster
+  become: yes
+  tasks:
+    - name: Install docker.io
+      ansible.builtin.apt:
+        name: docker.io
+        state: present
+        update_cache: yes
+
+
+      

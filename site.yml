@@ -1,3 +1,4 @@
 - import_playbook: playbooks/common/apt-update.yaml
 - import_playbook: playbooks/k3s-prepare/iscsi.yaml
+- import_playbook: playbooks/reboot-1/configtxt.yaml
 - import_playbook: playbooks/k3s-prepare/k3s-server.yaml

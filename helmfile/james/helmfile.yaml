@@ -9,6 +9,7 @@ releases:
     namespace: james
     createNamespace: true
     values:
+      - suppressPvcCreation: true
       - database:
           password: {{ exec "op" (list "read" "--no-newline" "op://Private/ojudof77k7b25wcwrvr3pf2uwq/password") | quote }}
 #      - cassandra:

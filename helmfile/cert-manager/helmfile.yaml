@@ -7,6 +7,23 @@ releases:
     version: 1.17.0
     namespace: cert-manager
     createNamespace: true
+    labels:
+      app: cert-manager
+      chart: cert-manager
+      heritage: Helm
+      release: cert-manager
+    kubeContext: rpi
     values:
       - crds:
           enabled: true
+
+  - name: cert-manager-resources
+    chart: ./rsrc/
+    namespace: cert-manager
+    createNamespace: true
+    kubeContext: rpi
+    labels:
+      app: cert-manager-resources
+      chart: cert-manager-resources
+      heritage: Helm
+      release: cert-manager-resources

@@ -13,7 +13,6 @@ releases:
           image:
             # supposed to be a best practice but needs more configuration i guess since it crashes on startup
             readOnlyRootFilesystem: false
-
           securityContext:
 #            capabilities:
 #              add: []

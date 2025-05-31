@@ -6,7 +6,7 @@
   hosts: none
   become: yes
   tasks:
-    - name: uninstann k3s agents
+    - name: uninstall k3s agents
       args:
           removes: /usr/local/bin/k3s-agent-uninstall.sh
       ansible.builtin.shell: /usr/local/bin/k3s-agent-uninstall.sh

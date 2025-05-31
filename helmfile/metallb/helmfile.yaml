@@ -1,0 +1,14 @@
+repositories:
+  - name: metallb
+    url: https://metallb.github.io/metallb
+releases:
+  - name: metallb
+    namespace: metallb-system
+    createNamespace: true
+    chart: metallb/metallb
+    kubeContext: rpi
+  - name: metallb-resources
+    namespace: metallb-system
+    createNamespace: true
+    kubeContext: rpi
+    chart: ./metallb-resources/

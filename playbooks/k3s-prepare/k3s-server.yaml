@@ -1,33 +1,33 @@
 - name: Bootstrap k3s control plane
-              hosts: k8s-control-plane-nodes
-              become: yes
-              tasks:
-                - name: Install k3s on the first control plane node
-                  when: inventory_hostname == 'pi-0'
-                  args:
-                    creates: /var/lib/rancher/k3s/server/node-token
-                  ansible.builtin.shell: |
-                    curl -L https://get.k3s.io \
-                      | K3S_TOKEN={{ lookup('file', 'k3s_token.txt') }} \
-                        INSTALL_K3S_EXEC="server {{ k3s.options }} {{ k3s.server_options }} --cluster-init" \
-                        sh -
+  hosts: k8s-control-plane-nodes
+  become: yes
+  tasks:
+    - name: Install k3s on the first control plane node
+      when: inventory_hostname == 'pi-0'
+      args:
+        creates: /var/lib/rancher/k3s/server/node-token
+      ansible.builtin.shell: |
+        curl -L https://get.k3s.io \
+          | K3S_TOKEN={{ lookup('file', 'k3s_token.txt') }} \
+            INSTALL_K3S_EXEC="server {{ k3s.options }} {{ k3s.server_options }} --cluster-init" \
+            sh -
 
-                - name: Install k3s on additional control plane nodes
-                  when: inventory_hostname != 'pi-0'
-                  args:
-                    creates: /var/lib/rancher/k3s/server/node-token
-                  ansible.builtin.shell: |
-                    curl -L https://get.k3s.io \
-                      | K3S_TOKEN={{ lookup('file', 'k3s_token.txt') }} \
-                        INSTALL_K3S_EXEC="server {{ k3s.options }} {{ k3s.server_options }} --server https://pi-0.local:6443" \
-                        sh -
+    - name: Install k3s on additional control plane nodes
+      when: inventory_hostname != 'pi-0'
+      args:
+        creates: /var/lib/rancher/k3s/server/node-token
+      ansible.builtin.shell: |
+        curl -L https://get.k3s.io \
+          | K3S_TOKEN={{ lookup('file', 'k3s_token.txt') }} \
+            INSTALL_K3S_EXEC="server {{ k3s.options }} {{ k3s.server_options }} --server https://pi-0.local:6443" \
+            sh -
 
-            - name: Download & Encrypt kubeconfig
-              hosts: pi-0
-              become: yes
-              tasks:
-                - name: Fetch kubeconfig
-                  ansible.builtin.fetch:
-                    src: /etc/rancher/k3s/k3s.yaml
-                    dest: ./rpi-kubeconfig.yaml
-                    flat: yes
+- name: Download & Encrypt kubeconfig
+  hosts: pi-0
+  become: yes
+  tasks:
+    - name: Fetch kubeconfig
+      ansible.builtin.fetch:
+        src: /etc/rancher/k3s/k3s.yaml
+        dest: ./rpi-kubeconfig.yaml
+        flat: yes

@@ -7,3 +7,13 @@ releases:
     createNamespace: true
     chart: longhorn/longhorn
     version: 1.8.1
+  - name: longhorn-extras
+    namespace: longhorn-system
+    createNamespace: true
+    chart: ./extras/
+    kubeContext: rpi
+    labels:
+      app: longhorn-extras
+      chart: longhorn-extras
+      heritage: Helm
+      release: longhorn-extras
