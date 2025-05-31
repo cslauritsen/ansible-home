@@ -3,7 +3,7 @@
 #  become: yes
 
 - name: Install k3s agent
-  hosts: k8s-worker-nodes
+  hosts: none
   become: yes
   tasks:
     - name: uninstann k3s agents

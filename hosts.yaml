@@ -17,8 +17,10 @@ k8s-nodes:
 k8s-control-plane-nodes:
   hosts:
     pi-0:
-
-k8s-worker-nodes:
-  hosts:
     pi-1:
     pi-2:
+
+k8s-worker-nodes:
+  hosts: {}
+#    pi-1:
+#    pi-2:

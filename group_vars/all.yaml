@@ -17,5 +17,14 @@ pi2:
     cidr: 24
     dns: 8.8.8.8,8.8.4.4
 k3s:
-  options: "--docker"
-  server_options: "--disable=traefik --disable=servicelb --secrets-encryption"
+  options: ""
+  server_options: >-
+    --disable=traefik 
+    --disable=servicelb 
+    --secrets-encryption
+    --tls-san pi-0.local
+    --tls-san 192.168.1.10
+    --tls-san pi-1.local
+    --tls-san 192.168.1.11
+    --tls-san pi-2.local
+    --tls-san 192.168.1.12
