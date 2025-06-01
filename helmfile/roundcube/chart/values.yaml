@@ -90,12 +90,12 @@ livenessProbe:
   httpGet:
     path: /
     port: http
-    timeoutSeconds: 5
+    timeoutSeconds: 10
 readinessProbe:
   httpGet:
     path: /
     port: http
-    timeoutSeconds: 5
+    timeoutSeconds: 10
 startupProbe:
   failureThreshold: 30
   periodSeconds: 10

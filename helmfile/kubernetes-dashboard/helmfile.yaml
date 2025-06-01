@@ -1,0 +1,22 @@
+repositories:
+  - name: kubernetes-dashboard
+    url: https://kubernetes.github.io/dashboard/
+
+releases:
+  - name: kubernetes-dashboard
+    namespace: kubernetes-dashboard
+    createNamespace: true
+    chart: kubernetes-dashboard/kubernetes-dashboard
+    kubeContext: rpi
+    values:
+      - dashboard:
+      - rbac:
+          clusterAdminRole: true
+
+  - name: kubernetes-dashboard-extras
+    namespace: kubernetes-dashboard
+    createNamespace: true
+    chart: ./extras/
+    kubeContext: rpi
+    labels:
+      app: kubernetes-dashboard-extras

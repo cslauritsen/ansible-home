@@ -1,6 +1,7 @@
-apiVersion: longhorn.io/v1beta2
-kind: Setting
-metadata:
-  name: backup-target
-  namespace: longhorn-system
-value: s3://planetlauritsen-longhorn/default
+# apparently can't do it this way, have to setup in the UI or research more
+#apiVersion: longhorn.io/v1beta2
+#kind: Setting
+#metadata:
+#  name: backup-target
+#  namespace: longhorn-system
+#value: s3://planetlauritsen-longhorn@us-east-2/default/
