@@ -9,6 +9,7 @@ releases:
       - env:
           ROUNDCUBEMAIL_DEFAULT_HOST: james.james
           ROUNDCUBEMAIL_SMTP_SERVER: james.james
+          ROUNDCUBEMAIL_SMTP_PORT: 25
       - ingress:
           enabled: true
           className: nginx
