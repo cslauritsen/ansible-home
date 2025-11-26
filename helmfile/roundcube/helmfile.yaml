@@ -9,7 +9,17 @@ releases:
       - env:
           ROUNDCUBEMAIL_DEFAULT_HOST: james.james
           ROUNDCUBEMAIL_SMTP_SERVER: james.james
-          ROUNDCUBEMAIL_SMTP_PORT: 25
+          ROUNDCUBEMAIL_SMTP_PORT: "587"
+          # i think it worked with out this
+          #ROUNDCUBEMAIL_SMTP_USE_TLS: "true"
+
+#            - env: │
+#          │     - name: ROUNDCUBEMAIL_DEFAULT_HOST                                                                                                                                                                                                                                                                                   │
+#          │       value: james.james                                                                                                                                                                                                                                                                                                 │
+#          │     - name: ROUNDCUBEMAIL_SMTP_SERVER                                                                                                                                                                                                                                                                                    │
+#          │       value: tls://james.james                                                                                                                                                                                                                                                                                           │
+#          │     - name: ROUNDCUBEMAIL_SMTP_PORT                                                                                                                                                                                                                                                                                      │
+#          │       value: "587"
       - ingress:
           enabled: true
           className: nginx
