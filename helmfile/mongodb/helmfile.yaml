@@ -1,0 +1,26 @@
+releases:
+  - name: mongo
+    chart: bitnami/mongodb
+    namespace: mongo
+    createNamespace: true
+    kubeContext: rpi
+    labels:
+      app: mongodb
+      chart: mongodb
+      heritage: Helm
+      release: mongodb
+    values:
+      - ./passwords.yaml.gotmpl
+      - fullnameOverride: mongo
+      - global:
+          defaultStorageClass: longhorn
+      - architecture: standalone
+      - persistence:
+          annotations: {}
+          storageClass: longhorn
+          size: 10Gi
+
+  - name: mongo-extras
+    namespace: mongo
+    createNamespace: true
+    chart: ./extras/
