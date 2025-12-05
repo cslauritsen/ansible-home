@@ -1,0 +1,35 @@
+releases:
+
+  # --- Strimzi Cluster Operator (deploys CRDs & operator) ---
+  - name: strimzi-kafka-operator
+    namespace: kafka
+    createNamespace: true
+    kubeContext: rpi
+    chart: oci://quay.io/strimzi-helm/strimzi-kafka-operator
+    version: "0.49.1"  # recent stable; uses v1 CRDs (v1beta2 still supported). [7](https://artifacthub.io/packages/helm/strimzi/strimzi-kafka-operator)
+    # After operator + CRDs are ready, apply the Kafka CR
+    hooks:
+      - events:
+          - postsync
+        showlogs: true
+        command: "kubectl"
+        args:
+          - apply
+          - -f
+          - strimzi-kafka.yaml
+          - -n
+          - kafka
+          - --context
+          - rpi
+      - events:
+          - preuninstall
+        showlogs: true
+        command: "kubectl"
+        args:
+          - delete
+          - -f
+          - strimzi-kafka.yaml
+          - -n
+          - kafka
+          - --context
+          - rpi
