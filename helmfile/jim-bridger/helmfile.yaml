@@ -1,7 +1,7 @@
 releases:
   - name: jim-bridger
     chart: oci://docker.io/cslauritsen/jim-bridger-chart
-    version: 0.2.4
+    version: 0.3.0
     kubeContext: rpi
     labels:
       cat: main
