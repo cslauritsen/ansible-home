@@ -1,7 +1,7 @@
 releases:
   - name: jim-bridger
     chart: oci://docker.io/cslauritsen/jim-bridger-chart
-    version: 0.4.0
+    version: 0.5.2
     kubeContext: rpi
     labels:
       cat: main
@@ -13,6 +13,11 @@ releases:
 #          tag: 0.2.2
       - smtp:
           host: james
+      - sqs:
+          enabled: true
+          queueUrl: {{ exec "bash" (list "-c" "cd /Users/csl04r/PycharmProjects/jim_bridger/terraform && terraform output -raw sqs_queue_url") | quote}}
+          dlqUrl: {{ exec "bash" (list "-c" "cd /Users/csl04r/PycharmProjects/jim_bridger/terraform && terraform output -raw sqs_dlq_url") | quote}}
+          s3BucketName: inmail-planetlauritsen
       - preSharedSecret: {{ exec "op" (list "read" "--no-newline" "op://Private/y26yrloe232cpc5cngcmjz35ty/password") }}
       - ingress:
           enabled: true

@@ -21,6 +21,9 @@ releases:
           username: {{ exec "op" (list "read" "--no-newline" "op://Shared/d2skk4dfae5mrboe4mhe3lc7um/username") | quote }}
           password: {{ exec "op" (list "read" "--no-newline" "op://Shared/d2skk4dfae5mrboe4mhe3lc7um/password") | quote }}
       - postgresql:
+          image:
+            # vmware fucked the internet again and removed their images from dockerhub under the old names
+            repository: bitnamilegacy/postgresql
           auth:
             database: james
             username: james

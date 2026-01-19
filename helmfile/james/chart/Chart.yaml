@@ -26,7 +26,7 @@ appVersion: postgres-latest
 dependencies:
   - name: postgresql
     condition: use_postgres
-    version: 16.6.3
+    version: 16.7.27 # latest pgsql 17.x chart as of Jan 2026
     repository: https://charts.bitnami.com/bitnami
 #  - name: opensearch
 #    version: 1.9.1
