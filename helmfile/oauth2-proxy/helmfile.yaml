@@ -1,6 +1,3 @@
-repositories:
-  - name: bitnami
-    url: https://charts.bitnami.com/bitnami
 releases:
   - name: oauth2-proxy-config
     kubeContext: rpi
@@ -8,8 +5,7 @@ releases:
     namespace: oauth2-proxy
   - name: oauth2-proxy
     kubeContext: rpi
-    chart: bitnami/oauth2-proxy
-    version: 6.2.11
+    chart: ./oauth2-proxy
     namespace: oauth2-proxy
     createNamespace: true
     values:
@@ -23,9 +19,6 @@ releases:
       - redis:
           enabled: false
       - configuration:
-          clientID: {{ exec "op" (list "read" "--no-newline" "op://Private/4vowpk2pjbbegc4wnwrz6s4mg4/client-id") | quote }}
-          clientSecret: {{ exec "op" (list "read" "--no-newline" "op://Private/4vowpk2pjbbegc4wnwrz6s4mg4/client-secret") | quote }}
-          cookieSecret: {{ exec "op" (list "read" "--no-newline" "op://Private/4vowpk2pjbbegc4wnwrz6s4mg4/cookie-secret") | quote  }}
           whitelistDomains:
             - .home.planetlauritsen.com
       - extraVolumes:
@@ -35,6 +28,7 @@ releases:
       - extraVolumeMounts:
           - name: allowed-emails
             mountPath: /etc/oauth2-proxy
+      - extraEnvVarsSecret: oauth2-proxy-secrets
       - extraArgs:
           - --cookie-secure=true
           - --cookie-samesite=lax
