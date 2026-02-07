@@ -5,13 +5,21 @@ releases:
   - name: oauth2-proxy-config
     kubeContext: rpi
     chart: ./rsrc
-    namespace: longhorn-system
+    namespace: oauth2-proxy
   - name: oauth2-proxy
     kubeContext: rpi
     chart: bitnami/oauth2-proxy
     version: 6.2.11
-    namespace: longhorn-system
+    namespace: oauth2-proxy
+    createNamespace: true
     values:
+      - global:
+          security:
+            allowInsecureImages: true
+      - image:
+            registry: quay.io
+            repository: oauth2-proxy/oauth2-proxy
+            tag: latest
       - redis:
           enabled: false
       - configuration:
@@ -44,7 +52,12 @@ releases:
       - ingress:
           enabled: true
           tls: true
-          selfSigned: true
+          selfSigned: false
           hostname: oauth2-proxy.home.planetlauritsen.com
           ingressClassName: nginx
-          existingSecretName: wildcard-home-planetlauritsen-tls
+          annotations:
+            cert-manager.io/cluster-issuer: letsencrypt-dns
+          extraTls:
+            - hosts:
+                - oauth2-proxy.home.planetlauritsen.com
+              secretName: oauth2-proxy-tls # pragma: allowlist secret

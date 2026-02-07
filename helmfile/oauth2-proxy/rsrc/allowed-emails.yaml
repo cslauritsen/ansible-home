@@ -5,4 +5,4 @@ data:
 kind: ConfigMap
 metadata:
   name: allowed-emails
-  namespace: longhorn-system
+  namespace: oauth2-proxy
