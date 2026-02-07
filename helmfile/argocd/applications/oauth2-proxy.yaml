@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: oauth2-proxy
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/cslauritsen/ansible-home.git
+    targetRevision: HEAD
+    path: helmfile/oauth2-proxy
+    plugin:
+      name: helmfile
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: oauth2-proxy
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+    # Manual sync initially - enable automated sync after validation
+    # automated:
+    #   prune: true
+    #   selfHeal: true
+
