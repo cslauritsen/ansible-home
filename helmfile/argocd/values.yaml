@@ -83,22 +83,21 @@ configs:
 
   # RBAC Configuration - Define roles and permissions
   rbac:
-    # IMPORTANT: Set default policy based on your security requirements
-    # Option 1 (Recommended): Give readonly by default, admin to specific users
+    # Grant admin to all oauth2-proxy authenticated users
+    # Since oauth2-proxy already restricts to allowed-emails.txt, this is safe
     policy.default: role:readonly
 
-    # Option 2 (If oauth2-proxy already restricts access to trusted users):
-    # policy.default: role:admin
-
-    # RBAC policies - grant admin to specific email addresses
-    # When using anonymous access with oauth2-proxy, you need to map users by their email
-    # The scopes determine what anonymous users can do
+    # RBAC policies - grant admin to anonymous users (authenticated by oauth2-proxy)
     policy.csv: |
-      # Grant admin role to anonymous users (all oauth2-proxy authenticated users)
-      # This is the simplest approach if oauth2-proxy already restricts to trusted users
-      # p, role:anonymous, applications, *, */*, allow
-      # p, role:anonymous, clusters, get, *, allow
-      # p, role:anonymous, repositories, *, *, allow
+      # Grant full admin permissions to anonymous users (oauth2-proxy authenticated)
+      p, role:anonymous, applications, *, */*, allow
+      p, role:anonymous, clusters, *, *, allow
+      p, role:anonymous, repositories, *, *, allow
+      p, role:anonymous, projects, *, *, allow
+      p, role:anonymous, accounts, *, *, allow
+      p, role:anonymous, certificates, *, *, allow
+      p, role:anonymous, gpgkeys, *, *, allow
+      g, role:anonymous, role:admin
       # p, role:anonymous, projects, *, *, allow
       # p, role:anonymous, accounts, *, *, allow
       # p, role:anonymous, certificates, *, *, allow
