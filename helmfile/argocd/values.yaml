@@ -6,6 +6,13 @@ global:
 
 ## Server configuration
 server:
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
   ingress:
     enabled: true
     ingressClassName: nginx
@@ -20,9 +27,10 @@ server:
     hosts:
       - argocd.home.planetlauritsen.com
     tls:
-      - secretName: wildcard-home-planetlauritsen-tls
+      - secretName: wildcard-home-planetlauritsen-tls # pragma: allowlist secret
         hosts:
           - argocd.home.planetlauritsen.com
+          - oauth2-proxy.home.planetlauritsen.com
     https: true
 
   # Additional configurations for server
@@ -80,13 +88,4 @@ repoServer:
     requests:
       cpu: 100m
       memory: 256Mi
-
-server:
-  resources:
-    limits:
-      cpu: 500m
-      memory: 512Mi
-    requests:
-      cpu: 100m
-      memory: 128Mi
 
