@@ -1,0 +1,19 @@
+repositories:
+  - name: argo
+    url: https://argoproj.github.io/argo-helm
+
+releases:
+  - name: argocd
+    namespace: argocd
+    createNamespace: true
+    chart: argo/argo-cd
+    version: 7.7.12
+    kubeContext: rpi
+    labels:
+      app: argocd
+      chart: argo-cd
+      heritage: Helm
+      release: argocd
+    values:
+      - ./values.yaml
+

@@ -1,0 +1,20 @@
+repositories:
+  - name: sealed-secrets
+    url: https://bitnami-labs.github.io/sealed-secrets
+releases:
+  - name: sealed-secrets-controller
+    namespace: kube-system
+    chart: sealed-secrets/sealed-secrets
+    version: 2.16.2
+    kubeContext: rpi
+    values:
+      - fullnameOverride: sealed-secrets-controller
+      - commandArgs:
+          - --update-status
+      - resources:
+          requests:
+            cpu: 50m
+            memory: 64Mi
+          limits:
+            cpu: 200m
+            memory: 256Mi

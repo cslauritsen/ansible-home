@@ -1,0 +1,92 @@
+## ArgoCD configuration
+## Ref: https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
+
+global:
+  domain: argocd.home.planetlauritsen.com
+
+## Server configuration
+server:
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-dns
+      nginx.ingress.kubernetes.io/ssl-passthrough: "false"
+      nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+      # OAuth2 proxy authentication
+      nginx.ingress.kubernetes.io/auth-url: "https://oauth2-proxy.home.planetlauritsen.com/oauth2/auth"
+      nginx.ingress.kubernetes.io/auth-signin: "https://oauth2-proxy.home.planetlauritsen.com/oauth2/start?rd=https://$host$request_uri"
+    hosts:
+      - argocd.home.planetlauritsen.com
+    tls:
+      - secretName: wildcard-home-planetlauritsen-tls
+        hosts:
+          - argocd.home.planetlauritsen.com
+    https: true
+
+  # Additional configurations for server
+  extraArgs:
+    - --insecure  # Terminate TLS at ingress level
+
+## Dex - Disable as we're using oauth2-proxy
+dex:
+  enabled: false
+
+## Redis configuration - use default settings for ARM64 compatibility
+redis:
+  enabled: true
+
+## ApplicationSet controller
+applicationSet:
+  enabled: true
+
+## Notifications controller
+notifications:
+  enabled: true
+
+## Config management plugins
+configs:
+  # Repository credentials and settings
+  repositories: {}
+
+  # General ArgoCD configuration
+  cm:
+    # Enable anonymous access through oauth2-proxy
+    # Users will authenticate via oauth2-proxy before reaching ArgoCD
+    url: https://argocd.home.planetlauritsen.com
+
+    # Enable exec provider for repo credentials (if needed)
+    exec.enabled: "true"
+
+    # Timeout settings
+    timeout.reconciliation: 180s
+
+## Resource limits for ARM64 Raspberry Pi cluster
+controller:
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+    requests:
+      cpu: 250m
+      memory: 512Mi
+
+repoServer:
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 256Mi
+
+server:
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
