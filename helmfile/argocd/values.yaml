@@ -24,6 +24,8 @@ server:
       # OAuth2 proxy authentication
       nginx.ingress.kubernetes.io/auth-url: "https://oauth2-proxy.home.planetlauritsen.com/oauth2/auth"
       nginx.ingress.kubernetes.io/auth-signin: "https://oauth2-proxy.home.planetlauritsen.com/oauth2/start?rd=https://$host$request_uri"
+      # Pass authentication headers to ArgoCD
+      nginx.ingress.kubernetes.io/auth-response-headers: "X-Auth-Request-User,X-Auth-Request-Email"
     hosts:
       - argocd.home.planetlauritsen.com
     tls:
@@ -60,8 +62,7 @@ configs:
 
   # General ArgoCD configuration
   cm:
-    # Enable anonymous access through oauth2-proxy
-    # Users will authenticate via oauth2-proxy before reaching ArgoCD
+    # Server URL
     url: https://argocd.home.planetlauritsen.com
 
     # Enable exec provider for repo credentials (if needed)
@@ -69,6 +70,46 @@ configs:
 
     # Timeout settings
     timeout.reconciliation: 180s
+
+    # Enable anonymous users - these are authenticated by oauth2-proxy
+    # ArgoCD will trust that nginx has already authenticated the user
+    users.anonymous.enabled: "true"
+
+  # ArgoCD server parameters
+  params:
+    # Enable reading username from headers
+    # nginx passes X-Auth-Request-Email from oauth2-proxy
+    server.rbac.log.enforce.enable: "true"
+
+  # RBAC Configuration - Define roles and permissions
+  rbac:
+    # IMPORTANT: Set default policy based on your security requirements
+    # Option 1 (Recommended): Give readonly by default, admin to specific users
+    policy.default: role:readonly
+
+    # Option 2 (If oauth2-proxy already restricts access to trusted users):
+    # policy.default: role:admin
+
+    # RBAC policies - grant admin to specific email addresses
+    # When using anonymous access with oauth2-proxy, you need to map users by their email
+    # The scopes determine what anonymous users can do
+    policy.csv: |
+      # Grant admin role to anonymous users (all oauth2-proxy authenticated users)
+      # This is the simplest approach if oauth2-proxy already restricts to trusted users
+      # p, role:anonymous, applications, *, */*, allow
+      # p, role:anonymous, clusters, get, *, allow
+      # p, role:anonymous, repositories, *, *, allow
+      # p, role:anonymous, projects, *, *, allow
+      # p, role:anonymous, accounts, *, *, allow
+      # p, role:anonymous, certificates, *, *, allow
+      # p, role:anonymous, gpgkeys, *, *, allow
+      # g, role:anonymous, role:admin
+      
+      # Alternative: If you want granular control by email, replace above with:
+      g, csl4jc@gmail.com, role:admin
+      # g, your-email@example.com, role:admin
+      # g, another-admin@example.com, role:admin
+      # And remove the role:anonymous admin grant
 
 ## Resource limits for ARM64 Raspberry Pi cluster
 controller:

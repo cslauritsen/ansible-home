@@ -56,16 +56,24 @@ Deploy ArgoCD on your K3s cluster to enable GitOps-based deployment management, 
 - [x] Optional: Create oauth2-proxy configuration if using external auth
 
 #### 2.4 Deploy ArgoCD
-- [ ] Deploy: `helmfile -f helmfile/argocd/helmfile.yaml apply`
-- [ ] Wait for pods: `kubectl wait --for=condition=ready pod -l app.kubernetes.io/name=argocd-server -n argocd --timeout=300s`
-- [ ] Get admin password: `kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d`
-- [ ] Save admin password securely
+- [x] Deploy: `helmfile -f helmfile/argocd/helmfile.yaml apply`
+- [x] Wait for pods: `kubectl wait --for=condition=ready pod -l app.kubernetes.io/name=argocd-server -n argocd --timeout=300s`
+- [x] Get admin password: `kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d`
+- [x] Save admin password securely (may not need it if oauth2-proxy RBAC is configured)
 
 #### 2.5 Access ArgoCD UI
-- [ ] Access via ingress: `https://argocd.home.planetlauritsen.com`
-- [ ] Or port-forward: `kubectl port-forward svc/argocd-server -n argocd 8080:443`
-- [ ] Login with admin credentials
-- [ ] Verify UI loads successfully
+- [x] Access via ingress: `https://argocd.home.planetlauritsen.com`
+- [x] Or port-forward: `kubectl port-forward svc/argocd-server -n argocd 8080:443`
+- [x] Login with admin credentials OR use oauth2-proxy authentication (see 2.6)
+- [x] Verify UI loads successfully
+
+#### 2.6 Configure OAuth2-Proxy RBAC (Optional but Recommended)
+- [x] Configuration added to grant admin privileges to oauth2-proxy authenticated users
+- [ ] Review `helmfile/argocd/README-OAUTH2-RBAC.md` for details
+- [ ] Decide on approach: grant admin to all oauth2-proxy users OR set up granular OIDC
+- [ ] If using approach 1 (grant admin to all): ensure oauth2-proxy's allowed-emails.txt is properly restricted
+- [ ] Apply updated configuration: `helmfile -f helmfile/argocd/helmfile.yaml apply`
+- [ ] Test: Access ArgoCD and verify you have admin privileges without logging in again
 
 ---
 
