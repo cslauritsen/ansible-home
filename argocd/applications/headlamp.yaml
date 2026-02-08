@@ -17,11 +17,11 @@ spec:
 
   destination:
     server: https://kubernetes.default.svc
-    namespace: headlamp
+    namespace: kube-system
 
   syncPolicy:
     syncOptions:
-      - CreateNamespace=true
+      - CreateNamespace=false
     automated:
       prune: true
       selfHeal: true
