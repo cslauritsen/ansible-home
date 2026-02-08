@@ -1,0 +1,40 @@
+# Enable metrics scraper for resource usage
+metrics-server:
+  enabled: true
+
+# RBAC configuration - grant cluster-admin role
+rbac:
+  clusterAdminRole: true
+
+# Ingress configuration with OAuth2-proxy authentication
+ingress:
+  enabled: true
+  ingressClassName: nginx
+  annotations:
+    # TLS certificate from cert-manager
+    cert-manager.io/cluster-issuer: letsencrypt-dns
+
+    # OAuth2-proxy authentication
+    nginx.ingress.kubernetes.io/auth-signin: https://oauth2-proxy.home.planetlauritsen.com/oauth2/start?rd=https://$host$request_uri
+    nginx.ingress.kubernetes.io/auth-url: https://oauth2-proxy.home.planetlauritsen.com/oauth2/auth
+    nginx.ingress.kubernetes.io/auth-response-headers: X-Auth-Request-User,X-Auth-Request-Email
+
+    # Dashboard-specific settings
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    nginx.ingress.kubernetes.io/proxy-body-size: 10000m
+
+  hosts:
+    - kubernetes-dashboard.home.planetlauritsen.com
+
+  tls:
+    - secretName: kubernetes-dashboard-tls # pragma: allowlist secret
+      hosts:
+        - kubernetes-dashboard.home.planetlauritsen.com
+
+# Service configuration
+service:
+  type: ClusterIP
+
+# Dashboard settings - enable skip option for OAuth2 flow
+settings:
+  {}

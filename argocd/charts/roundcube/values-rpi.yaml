@@ -17,6 +17,6 @@ ingress:
         - path: /
           pathType: Prefix
   tls:
-    - secretName: roundcube-tls
+    - secretName: roundcube-tls # pragma: allowlist secret
       hosts:
         - mail.home.planetlauritsen.com

@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: https://github.com/cslauritsen/ansible-home.git
     targetRevision: main
-    path: charts/roundcube/chart
+    path: argocd/charts/roundcube/chart
     helm:
       valueFiles:
         - ../values-rpi.yaml

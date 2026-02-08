@@ -1,0 +1,33 @@
+---
+# ServiceAccount for OAuth2-authenticated dashboard users
+# The kubernetes-dashboard chart creates its own service account,
+# but we need to ensure it has cluster-admin permissions
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: oauth2-dashboard-admin
+  namespace: kubernetes-dashboard
+  labels:
+    app: kubernetes-dashboard
+---
+# ClusterRoleBinding to grant cluster-admin permissions
+# This allows OAuth2-authenticated users to have full admin access to the dashboard
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: oauth2-dashboard-admin
+  labels:
+    app: kubernetes-dashboard
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+  - kind: ServiceAccount
+    name: oauth2-dashboard-admin
+    namespace: kubernetes-dashboard
+  # Also bind to the default dashboard service account
+  - kind: ServiceAccount
+    name: kubernetes-dashboard
+    namespace: kubernetes-dashboard
+
