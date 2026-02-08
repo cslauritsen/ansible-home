@@ -9,7 +9,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/cslauritsen/ansible-home.git
-    targetRevision: HEAD
+    targetRevision: main
     path: charts/roundcube/chart
     helm:
       valueFiles:
