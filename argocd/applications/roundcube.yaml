@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: root-app
+  name: roundcube
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
@@ -10,14 +10,17 @@ spec:
   source:
     repoURL: https://github.com/cslauritsen/ansible-home.git
     targetRevision: HEAD
-    path: helmfile/argocd/applications
+    path: charts/roundcube/chart
+    helm:
+      valueFiles:
+        - ../values-rpi.yaml
   destination:
     server: https://kubernetes.default.svc
-    namespace: argocd
+    namespace: roundcube
   syncPolicy:
     syncOptions:
       - CreateNamespace=true
-    # Start with manual sync - change to automated later
+    # Manual sync initially - enable automated sync after validation
     # automated:
     #   prune: true
     #   selfHeal: true
