@@ -7,8 +7,8 @@ metadata:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
-  source:
-    repoURL: https://github.com/cslauritsen/ansible-home.git
+  sources:
+  - repoURL: https://github.com/cslauritsen/ansible-home.git
     targetRevision: main
     path: argocd/charts/headlamp/chart
     helm:
