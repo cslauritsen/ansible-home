@@ -1,0 +1,22 @@
+pvc:
+  storageClassName: longhorn
+  volumeName: pvc-87272075-5eec-4202-98b6-a721b73571aa
+env:
+  ROUNDCUBEMAIL_DEFAULT_HOST: james.james
+  ROUNDCUBEMAIL_SMTP_SERVER: james.james
+  ROUNDCUBEMAIL_SMTP_PORT: "587"
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-dns
+  hosts:
+    - host: mail.home.planetlauritsen.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: roundcube-tls
+      hosts:
+        - mail.home.planetlauritsen.com

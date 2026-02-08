@@ -80,45 +80,45 @@ Deploy ArgoCD on your K3s cluster to enable GitOps-based deployment management, 
 ### Phase 3: GitHub Repository Configuration
 
 #### 3.1 Prepare GitHub Repository
-- [ ] Ensure ansible-home repo is pushed to GitHub
-- [ ] Create GitHub Personal Access Token (PAT) with `repo` scope
-- [ ] Or generate SSH deploy key: `ssh-keygen -t ed25519 -C "argocd@rpi-cluster" -f ~/.ssh/argocd-deploy-key`
+- [x] Ensure ansible-home repo is pushed to GitHub
+- [x] Create GitHub Personal Access Token (PAT) with `repo` scope
+- [x] Or generate SSH deploy key: `ssh-keygen -t ed25519 -C "argocd@rpi-cluster" -f ~/.ssh/argocd-deploy-key`
 
 #### 3.2 Create Repository Secret in ArgoCD
-- [ ] Option A - Via UI: Add repository in ArgoCD Settings → Repositories
+- [x] Option A - Via UI: Add repository in ArgoCD Settings → Repositories
 - [ ] Option B - Via sealed secret:
   - [ ] Create secret YAML with GitHub credentials
   - [ ] Seal it: `kubeseal < github-repo-secret.yaml -o yaml > sealed-github-repo-secret.yaml`
   - [ ] Apply: `kubectl apply -f sealed-github-repo-secret.yaml`
-- [ ] Test connection in ArgoCD UI
+- [x] Test connection in ArgoCD UI
 
 ---
 
 ### Phase 4: Create ArgoCD Applications
 
 #### 4.1 Create Applications Directory Structure
-- [ ] Create: `mkdir -p helmfile/argocd/applications`
-- [ ] Create: `mkdir -p helmfile/argocd/app-of-apps`
+- [x] Create: `mkdir -p helmfile/argocd/applications`
+- [x] Create: `mkdir -p helmfile/argocd/app-of-apps`
 
 #### 4.2 Create App-of-Apps Pattern
-- [ ] Create `helmfile/argocd/app-of-apps/root-app.yaml` (ArgoCD Application that manages other Applications)
-- [ ] Configure to watch `helmfile/argocd/applications/` directory
-- [ ] Set sync policy to manual initially
-- [ ] Set destination to `rpi` cluster
+- [x] Create `helmfile/argocd/app-of-apps/root-app.yaml` (ArgoCD Application that manages other Applications)
+- [x] Configure to watch `helmfile/argocd/applications/` directory
+- [x] Set sync policy to manual initially
+- [x] Set destination to `rpi` cluster
 
 #### 4.3 Create Individual Application Manifests
-- [ ] Create `helmfile/argocd/applications/metallb.yaml`
-- [ ] Create `helmfile/argocd/applications/cert-manager.yaml`
-- [ ] Create `helmfile/argocd/applications/ingress-nginx.yaml`
-- [ ] Create `helmfile/argocd/applications/longhorn.yaml`
-- [ ] Add more applications as needed
+- [x] Create `helmfile/argocd/applications/metallb.yaml`
+- [x] Create `helmfile/argocd/applications/cert-manager.yaml`
+- [x] Create `helmfile/argocd/applications/ingress-nginx.yaml`
+- [x] Create `helmfile/argocd/applications/longhorn.yaml`
+- [x] Add more applications as needed (alloy, grafana, kafka, kubernetes-dashboard, mongodb, oauth2-proxy, rabbitmq, sealed-secrets)
 
 #### 4.4 Configure Application Sources
-- [ ] Set `repoURL` to your GitHub repository
-- [ ] Set `targetRevision` to `main` or `HEAD`
-- [ ] Set `path` to helmfile directory (e.g., `helmfile/metallb`)
-- [ ] Configure sync policy (manual vs automatic)
-- [ ] Add sync options (e.g., `CreateNamespace=true`)
+- [x] Set `repoURL` to your GitHub repository
+- [x] Set `targetRevision` to `main` or `HEAD`
+- [x] Set `path` to helmfile directory (e.g., `helmfile/metallb`)
+- [x] Configure sync policy (manual vs automatic)
+- [x] Add sync options (e.g., `CreateNamespace=true`)
 
 ---
 
@@ -279,16 +279,16 @@ helmfile -f helmfile/argocd/helmfile.yaml diff
 
 ## Progress Tracking
 
-- **Phase 1**: ☐ Secret Management Setup
-- **Phase 2**: ☐ ArgoCD Deployment  
-- **Phase 3**: ☐ GitHub Repository Configuration
-- **Phase 4**: ☐ Create ArgoCD Applications
+- **Phase 1**: ✅ Secret Management Setup
+- **Phase 2**: ✅ ArgoCD Deployment  
+- **Phase 3**: ✅ GitHub Repository Configuration
+- **Phase 4**: ✅ Create ArgoCD Applications
 - **Phase 5**: ☐ Convert Secrets to Sealed Secrets
 - **Phase 6**: ☐ Deploy Root Application and Test
 - **Phase 7**: ☐ Enable GitOps Workflow
 - **Phase 8**: ☐ Cleanup and Documentation
 
-**Current Phase**: Phase 1 - Secret Management Setup
+**Current Phase**: Phase 5 - Convert Secrets to Sealed Secrets
 
 ---
 
