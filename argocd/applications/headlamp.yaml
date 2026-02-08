@@ -7,13 +7,13 @@ metadata:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
-  sources:
-    - repoURL: https://kubernetes-sigs.github.io/headlamp/
-      chart: headlamp
-      targetRevision: 0.40.0
-      helm:
-        valueFiles:
-          - argocd/charts/headlamp/values-rpi.yaml
+  source:
+    repoURL: https://github.com/cslauritsen/ansible-home.git
+    targetRevision: main
+    path: argocd/charts/headlamp/chart
+    helm:
+      valueFiles:
+        - ../values-rpi.yaml
 
   destination:
     server: https://kubernetes.default.svc
