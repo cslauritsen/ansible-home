@@ -8,14 +8,12 @@ metadata:
 spec:
   project: default
   sources:
-    # Main Helm chart from upstream
-    - repoURL: https://kubernetes.github.io/dashboard/
-      chart: kubernetes-dashboard
-      targetRevision: 7.10.0  # Update to latest stable version
+    - repoURL: https://github.com/cslauritsen/ansible-home.git
+      targetRevision: main
+      path: argocd/charts/kubernetes-dashboard/chart
       helm:
-        releaseName: kubernetes-dashboard
         valueFiles:
-          - argocd/charts/kubernetes-dashboard/values-rpi.yaml
+          - ../values-rpi.yaml
     # Additional RBAC configuration from git repo
     - repoURL: https://github.com/cslauritsen/ansible-home.git
       targetRevision: main
