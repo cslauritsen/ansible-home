@@ -1,0 +1,32 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: helm-dashboard
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  sources:
+    - repoURL: https://helm-charts.komodor.io
+      chart: helm-dashboard
+      targetRevision: 2.0.4
+      helm:
+        valueFiles:
+          - $values/argocd/charts/helm-dashboard/values-rpi.yaml
+    - repoURL: https://github.com/cslauritsen/ansible-home.git
+      targetRevision: main
+      ref: values
+    - repoURL: https://github.com/cslauritsen/ansible-home.git
+      targetRevision: main
+      path: argocd/charts/helm-dashboard/rsrc
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: helm-dashboard
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+    automated:
+      prune: true
+      selfHeal: true
+

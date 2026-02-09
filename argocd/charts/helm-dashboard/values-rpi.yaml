@@ -1,0 +1,63 @@
+# Helm Dashboard values for Raspberry Pi cluster
+# This configuration enables cluster mode and uses our dedicated service account
+
+# Use the chart's built-in service account with cluster-admin privileges
+serviceAccount:
+  create: true
+  name: "helm-dashboard-admin"
+
+# Resource limits appropriate for Raspberry Pi
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+# Dashboard configuration
+dashboard:
+  # Allow write actions (install, upgrade, delete)
+  allowWriteActions: true
+
+  # Enable persistence for better performance
+  persistence:
+    enabled: true
+    size: 100M
+    accessModes:
+      - ReadWriteOnce
+
+# Extra arguments for the dashboard (including cluster mode)
+extraArgs:
+  - --no-browser
+  - --bind=0.0.0.0
+  - --cluster-mode
+
+# Service configuration
+service:
+  type: ClusterIP
+  port: 8080
+
+# Disable built-in ingress (we manage it separately)
+ingress:
+  enabled: false
+
+# Pod security and scheduling
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  fsGroup: 1000
+
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: false
+  capabilities:
+    drop:
+      - ALL
+
+# Node affinity for Raspberry Pi nodes (optional)
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
