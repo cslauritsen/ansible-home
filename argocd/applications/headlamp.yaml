@@ -8,20 +8,23 @@ metadata:
 spec:
   project: default
   sources:
-  - repoURL: https://github.com/cslauritsen/ansible-home.git
-    targetRevision: main
-    path: argocd/charts/headlamp/chart
-    helm:
-      valueFiles:
-        - ../values-rpi.yaml
+    - repoURL: https://github.com/cslauritsen/ansible-home.git
+      targetRevision: main
+      path: argocd/charts/headlamp/chart
+      helm:
+        valueFiles:
+          - ../values-rpi.yaml
+    - repoURL: https://github.com/cslauritsen/ansible-home.git
+      targetRevision: main
+      path: argocd/charts/headlamp/rsrc  # ← Adds the SealedSecret
 
   destination:
     server: https://kubernetes.default.svc
-    namespace: kube-system
+    namespace: headlamp  # ← Changed from kube-system
 
   syncPolicy:
     syncOptions:
-      - CreateNamespace=false
+      - CreateNamespace=true  # ← Changed to true
     automated:
       prune: true
       selfHeal: true
