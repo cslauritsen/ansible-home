@@ -74,7 +74,7 @@ config:
     # -- OIDC scopes to be used
     scopes: ""
     # -- OIDC callback URL
-    callbackURL: ""
+    callbackURL: "https://headlamp.home.planetlauritsen.com/oidc-callback"
 
     # -- OIDC client to be used during token validation
     validatorClientID: ""
@@ -228,8 +228,6 @@ ingress:
   # -- Annotations for Ingress resource
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-dns
-    nginx.ingress.kubernetes.io/configuration-snippet: |
-      proxy_set_header X-Forwarded-Proto $scheme;
   # kubernetes.io/tls-acme: "true"
 
   # -- Additional labels to add to the Ingress resource
