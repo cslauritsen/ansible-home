@@ -6,7 +6,7 @@ env:
   ROUNDCUBEMAIL_SMTP_SERVER: james.james
   ROUNDCUBEMAIL_SMTP_PORT: "587"
   ROUNDCUBEMAIL_INSTALL_PLUGINS: "true"
-  ROUNDCUBEMAIL_PLUGINS: "managesieve,markasjunk,archive,zipdownload,ss88/easy_unsubscribe"
+  ROUNDCUBEMAIL_PLUGINS: "managesieve,markasjunk,archive,zipdownload,easy_unsubscribe"
 
 ingress:
   enabled: true
