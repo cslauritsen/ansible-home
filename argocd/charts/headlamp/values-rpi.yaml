@@ -70,7 +70,7 @@ config:
     # -- OIDC client secret
     clientSecret: ""
     # -- OIDC issuer URL
-    issuerURL: ""
+    issuerURL: "https://accounts.google.com"
     # -- OIDC scopes to be used
     scopes: ""
     # -- OIDC callback URL
