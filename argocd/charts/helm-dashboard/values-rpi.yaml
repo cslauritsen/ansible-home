@@ -31,7 +31,6 @@ dashboard:
 extraArgs:
   - --no-browser
   - --bind=0.0.0.0
-  - --cluster-mode
 
 # Service configuration
 service:
