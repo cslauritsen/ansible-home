@@ -25,17 +25,4 @@ spec:
                 name: helm-dashboard
                 port:
                   number: 8080
----
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: helm-dashboard-cert
-  namespace: helm-dashboard
-spec:
-  secretName: helm-dashboard-tls # pragma: allowlist secret
-  issuerRef:
-    name: letsencrypt-prod
-    kind: ClusterIssuer
-  dnsNames:
-    - helm-dashboard.home.planetlauritsen.com
 
