@@ -79,6 +79,9 @@ spec:
             - name: conf-vol
               mountPath: /etc/apache2/ports.conf
               subPath: ports.conf
+            - name: conf-vol
+              mountPath: /var/roundcube/config/config.inc.php
+              subPath: config.inc.php
             - name: data-vol
               mountPath: /var/roundcube/db
           {{- with .Values.volumeMounts }}

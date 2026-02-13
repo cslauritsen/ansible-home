@@ -7,3 +7,10 @@ metadata:
 data:
   ports.conf: |
     Listen 0.0.0.0:80
+  config.inc.php: |
+    <?php
+    // Custom Roundcube configuration
+    // Disable SMTP authentication - use anonymous relay to internal mail server
+    $config['smtp_user'] = '';
+    $config['smtp_pass'] = '';
+    ?>
