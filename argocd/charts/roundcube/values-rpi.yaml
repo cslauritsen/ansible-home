@@ -4,7 +4,7 @@ pvc:
 env:
   ROUNDCUBEMAIL_DEFAULT_HOST: james.james
   ROUNDCUBEMAIL_SMTP_SERVER: james.james
-  ROUNDCUBEMAIL_SMTP_PORT: "587"
+  ROUNDCUBEMAIL_SMTP_PORT: "25"
 # ROUNDCUBEMAIL_INSTALL_PLUGINS: "true"
 #  ROUNDCUBEMAIL_PLUGINS: "managesieve,markasjunk,archive,zipdownload,easy_unsubscribe"
 
