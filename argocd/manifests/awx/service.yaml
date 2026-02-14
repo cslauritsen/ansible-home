@@ -5,23 +5,12 @@ metadata:
   name: awx-external
   namespace: awx
 spec:
+  type: ExternalName
+  externalName: wmini.planetlauritsen.com
   ports:
     - name: http
       port: 8052
       targetPort: 8052
       protocol: TCP
----
-apiVersion: v1
-kind: Endpoints
-metadata:
-  name: awx-external
-  namespace: awx
-subsets:
-  - addresses:
-      - ip: 192.168.1.181
-    ports:
-      - name: http
-        port: 8052
-        protocol: TCP
 
 
