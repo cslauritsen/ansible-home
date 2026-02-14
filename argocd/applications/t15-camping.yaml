@@ -8,7 +8,7 @@ metadata:
 spec:
   project: default
   sources:
-    - repoURL: oci://docker.io/cslauritsen
+    - repoURL: docker.io/cslauritsen
       chart: t15-camping-chart
       targetRevision: 1.0.6
       helm: {}
