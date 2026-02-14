@@ -9,7 +9,6 @@ spec:
   project: default
   sources:
     - repoURL: oci://docker.io/cslauritsen/t15-camping-chart
-      chart: t15-camping-chart
       targetRevision: 1.0.6
       helm: {}
     - repoURL: https://github.com/cslauritsen/ansible-home.git
