@@ -10,7 +10,7 @@ spec:
   ports:
     - name: http
       port: 8052
-      targetPort: 8052
+      targetPort: 30921
       protocol: TCP
 
 
