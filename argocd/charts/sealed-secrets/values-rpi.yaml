@@ -1,6 +1,10 @@
+image:
+  repository: cslauritsen/sealed-secrets-controller
+  tag: 0.27.2-csl
 fullnameOverride: sealed-secrets-controller
 commandArgs:
   - --update-status
+  - --key-prefix=sealed-secrets-key
 resources:
   requests:
     cpu: 50m
