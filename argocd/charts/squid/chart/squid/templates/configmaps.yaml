@@ -1,0 +1,35 @@
+{{- if .Values.envFrom }}
+{{- if .Values.envFrom.configmaps }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "helmproj.fullname" . }}
+data:
+  {{- range $key, $value := .Values.envFrom.configmaps }}
+  {{ $key }}: {{ $value | quote }}
+  {{- end }}
+{{- end }}
+{{- end }}
+---
+{{- if .Values.volumeMounts }}
+{{- if .Values.volumeMounts.configmaps }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "helmproj.fullname" . }}-vols
+data:
+{{- range $key, $value := .Values.volumeMounts.configmaps }}
+  {{ $key }}: |-
+    {{ $value | nindent 4 }}
+{{- end }}
+{{- end }}
+{{- end }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "helmproj.fullname" . }}-config
+data:
+  squid.conf: |-
+    {{ .Values.squid_config | nindent 4}}
+    

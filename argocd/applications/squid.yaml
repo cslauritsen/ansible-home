@@ -1,22 +1,21 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: roundcube
+  name: squid
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
-  source:
-    repoURL: https://github.com/cslauritsen/ansible-home.git
-    targetRevision: main
-    path: argocd/charts/roundcube/chart
-    helm:
-      valueFiles:
-        - ../values-rpi.yaml
+  repoURL: https://github.com/cslauritsen/ansible-home.git
+  targetRevision: main
+  path: argocd/charts/squid/chart
+  helm:
+    valueFiles:
+      - ../values-rpi.yaml
   destination:
     server: https://kubernetes.default.svc
-    namespace: roundcube
+    namespace: squid
   syncPolicy:
     syncOptions:
       - CreateNamespace=true

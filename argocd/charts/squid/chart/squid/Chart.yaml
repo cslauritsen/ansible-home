@@ -1,0 +1,17 @@
+apiVersion: v2
+appVersion: 6.10-24.10_edge
+description: 'Squid Web Proxy Cache '
+home: https://www.squid-cache.org/
+icon: https://avatars.githubusercontent.com/u/363029?s=48&v=4
+keywords:
+- squid
+- proxy
+maintainers:
+- email: sergiotocalini@gmail.com
+  name: Sergio Tocalini
+  url: https://sergiotocalini.github.io
+name: squid
+sources:
+- https://github.com/squid-cache/squid
+type: application
+version: 1.0.0

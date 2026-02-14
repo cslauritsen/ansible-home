@@ -1,0 +1,122 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "helmproj.fullname" . }}
+  labels:
+    {{- include "helmproj.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "helmproj.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "helmproj.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "helmproj.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: squid
+              containerPort: {{ .Values.service.internalPort | default "3128" }}
+              protocol: TCP
+          # livenessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: http
+          # readinessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: http
+          {{- if .Values.volumeMounts }}
+          volumeMounts:
+            - name: squid-data-vol
+              mountPath: /var/spool/squid
+            - name: squid-config-vol
+              mountPath: /etc/squid/squid.conf
+              subPath: squid.conf
+            {{- range $key, $val := .Values.volumeMounts.configmaps }}
+            - name: {{ $key }}
+              mountPath: {{ $.Values.volumeMountsPath.configmaps }}/{{ $key }}
+              subPath: {{ $key }}
+              readOnly: true
+            {{- end }}
+            {{- range $key, $val := .Values.volumeMounts.secrets }}
+            - name: {{ $key }}
+              mountPath: {{ $.Values.volumeMountsPath.secrets }}/{{ $key }}
+              subPath: {{ $key }}
+              readOnly: true
+            {{- end }}
+          {{- end }}
+          {{- if .Values.envFrom }}
+          {{- if or .Values.envFrom.configmaps .Values.envFrom.secrets }}
+          envFrom:
+            {{- if .Values.envFrom.configmaps }}
+            - configMapRef:
+                name: {{ template "helmproj.fullname" . }}
+            {{- end }}
+            {{- if .Values.envFrom.secrets }}
+            - secretRef:
+                name: {{ template "helmproj.fullname" . }}
+            {{- end }}
+          {{- end }}
+          {{- end }}
+          {{- with .Values.env }}
+          env:
+            {{- range $k, $v := . }}
+            - name: {{ $k | quote}}
+              value: {{ $v | quote }}
+            {{- end }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: squid-data-vol
+          persistentVolumeClaim:
+            claimName: {{ template "helmproj.fullname" . }}-data
+        - name: squid-config-vol
+          configMap:
+            name: {{ template "helmproj.fullname" . }}-config
+            items:
+            - key: squid.conf
+              path: squid.conf
+        {{- range $key, $val := .Values.volumeMounts.configmaps }}
+        - name: {{ $key }}
+          configMap:
+            name: {{ template "helmproj.fullname" . }}-vols
+        {{- end }}
+        {{- range $key, $val := .Values.volumeMounts.secrets }}
+        - name: {{ $key }}
+          secret:
+            secretName: {{ template "helmproj.fullname" . }}-vols
+        {{- end }}
+
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

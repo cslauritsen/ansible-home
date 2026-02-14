@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ template "helmproj.fullname" . }}-data
+spec:
+  accessModes:
+    - {{ .Values.pvc.accessModes | default "ReadWriteMany" | quote }}
+  storageClassName: {{ .Values.pvc.storageClassName | default "default" | quote }}
+  {{- if (lookup "v1" "PersistentVolumeClaim" "default" "test-pvc") }}
+  volumeName: {{ (lookup "v1" "PersistentVolumeClaim" "default" "test-pvc").spec.volumeName }}
+  {{- end }}
+  # {{- if not (eq .Values.pvc.volumeName "") }}
+  # volumeName: {{ .Values.pvc.volumeName | quote }}
+  # {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.pvc.size | default "500M" | quote }}

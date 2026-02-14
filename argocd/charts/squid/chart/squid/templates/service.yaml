@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "helmproj.fullname" . }}
+  labels:
+    {{- include "helmproj.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port | default "3128" }}
+      targetPort: {{ .Values.service.internalPort | default "3128" }}
+      protocol: TCP
+      name: squid
+  selector:
+    {{- include "helmproj.selectorLabels" . | nindent 4 }}
