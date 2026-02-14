@@ -1,26 +1,28 @@
-debian_based:
-  hosts:
-    pi-0:
-    pi-1:
-    pi-2:
-rpi-cluster:
-  hosts:
-    pi-0:
-    pi-1:
-    pi-2:
-
-k8s-nodes:
+all:
   children:
+    debian_based:
+      hosts:
+        pi-0:
+        pi-1:
+        pi-2:
+    rpi-cluster:
+      hosts:
+        pi-0:
+        pi-1:
+        pi-2:
+
+    k8s-nodes:
+      children:
+        k8s-control-plane-nodes:
+        k8s-worker-nodes:
+
     k8s-control-plane-nodes:
+      hosts:
+        pi-0:
+        pi-1:
+        pi-2:
+
     k8s-worker-nodes:
-
-k8s-control-plane-nodes:
-  hosts:
-    pi-0:
-    pi-1:
-    pi-2:
-
-k8s-worker-nodes:
-  hosts: {}
-#    pi-1:
-#    pi-2:
+      hosts: {}
+    #    pi-1:
+    #    pi-2:
