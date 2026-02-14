@@ -1,0 +1,32 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: jim-bridger
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  sources:
+    - repoURL: docker.io/cslauritsen
+      chart: jim-bridger-chart
+      targetRevision: 0.5.2
+      helm:
+        valueFiles:
+          - $values/argocd/charts/jim-bridger/values-rpi.yaml
+    - repoURL: https://github.com/cslauritsen/ansible-home.git
+      targetRevision: main
+      ref: values
+    - repoURL: https://github.com/cslauritsen/ansible-home.git
+      targetRevision: main
+      path: argocd/charts/jim-bridger/rsrc
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: james
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+    automated:
+      prune: true
+      selfHeal: true
+

@@ -1,0 +1,27 @@
+
+fullnameOverride: jim-bridger
+#      - image:
+#          tag: 0.2.2
+smtp:
+    host: james
+sqs:
+    enabled: true
+    queueUrl: https://sqs.us-east-2.amazonaws.com/111657657102/jim-bridger-queue
+    dlqUrl: https://sqs.us-east-2.amazonaws.com/111657657102/jim-bridger-dlq
+    s3BucketName: inmail-planetlauritsen
+preSharedSecret: {{ exec "op" (list "read" "--no-newline" "op://Private/y26yrloe232cpc5cngcmjz35ty/password") }}
+ingress:
+    enabled: true
+    className: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-dns
+      nginx.ingress.kubernetes.io/proxy-body-size: 100m
+    hosts:
+      - host: jim-bridger.home.planetlauritsen.com
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: jim-bridger-tls
+        hosts:
+          - jim-bridger.home.planetlauritsen.com
