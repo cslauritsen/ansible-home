@@ -7,13 +7,17 @@ metadata:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
-  source:
-    repoURL: https://github.com/cslauritsen/ansible-home.git
-    targetRevision: main
-    path: argocd/charts/squid/chart
-    helm:
-      valueFiles:
-        - ../values-rpi.yaml
+  sources:
+    - repoURL: https://github.com/cslauritsen/ansible-home.git
+      targetRevision: main
+      path: argocd/charts/squid/rsrc
+
+    - repoURL: https://github.com/cslauritsen/ansible-home.git
+      targetRevision: main
+      path: argocd/charts/squid/chart
+      helm:
+        valueFiles:
+          - ../values-rpi.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: squid
