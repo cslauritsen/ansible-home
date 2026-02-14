@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: t15-camping
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  sources:
+    - repoURL: oci://docker.io/cslauritsen/t15-camping-chart
+      targetRevision: 1.0.6
+      helm: {}
+    - repoURL: https://github.com/cslauritsen/ansible-home.git
+      targetRevision: main
+      path: argocd/charts/t15/rsrc
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: t15-camping
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+    automated:
+      prune: true
+      selfHeal: true
+
