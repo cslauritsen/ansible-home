@@ -9,7 +9,6 @@ sqs:
     queueUrl: https://sqs.us-east-2.amazonaws.com/111657657102/jim-bridger-queue
     dlqUrl: https://sqs.us-east-2.amazonaws.com/111657657102/jim-bridger-dlq
     s3BucketName: inmail-planetlauritsen
-preSharedSecret: {{ exec "op" (list "read" "--no-newline" "op://Private/y26yrloe232cpc5cngcmjz35ty/password") }}
 ingress:
     enabled: true
     className: nginx
