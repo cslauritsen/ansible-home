@@ -10,7 +10,7 @@ spec:
   sources:
     - repoURL: docker.io/cslauritsen
       chart: jim-bridger-chart
-      targetRevision: 0.5.2
+      targetRevision: 0.5.3
       helm:
         valueFiles:
           - $values/argocd/charts/jim-bridger/values-rpi.yaml
