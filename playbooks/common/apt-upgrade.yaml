@@ -5,6 +5,10 @@
      become: yes
      ansible.builtin.command: apt-get clean
      changed_when: false
+   - name: Update apt cache
+     become: yes
+     ansible.builtin.command: apt-get update
+     changed_when: false
    - name: Apt upgrade
      become: yes
      ansible.builtin.apt:
