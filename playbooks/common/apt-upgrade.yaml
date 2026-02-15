@@ -1,6 +1,10 @@
 - name: Update all packages to the latest version
   hosts: debian
   tasks:
+   - name: Clean apt cache
+     become: yes
+     ansible.builtin.command: apt-get clean
+     changed_when: false
    - name: Apt upgrade
      become: yes
      ansible.builtin.apt:
