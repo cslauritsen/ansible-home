@@ -1,5 +1,5 @@
 - name: Bootstrap k3s control plane
-  hosts: k8s-control-plane-nodes
+  hosts: k8scontrolplanenodes
   become: yes
   tasks:
     - name: Install k3s on the first control plane node

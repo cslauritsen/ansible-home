@@ -1,5 +1,5 @@
 #- name: Uninstall k3s agent
-#  hosts: k8s-worker-nodes
+#  hosts: k8sworkernodes
 #  become: yes
 
 - name: Install k3s agent

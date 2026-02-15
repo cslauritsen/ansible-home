@@ -1,6 +1,6 @@
 ---
 - name: Allow nginx to bind to low ports without root
-  hosts: rpi-cluster
+  hosts: rpicluster
   become: yes
   tasks:
     - name: Install libcap2-bin (for setcap)

@@ -1,5 +1,5 @@
 - name: Install iSCSI
-  hosts: rpi-cluster
+  hosts: rpicluster
   tasks:
     - name: install iscsi
       become: yes

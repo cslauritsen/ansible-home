@@ -1,25 +1,25 @@
 all:
   children:
 
-    debian-based:
+    debian:
       hosts:
         pi-0:
         pi-1:
         pi-2:
 
-    rpi-cluster:
+    rpicluster:
       children:
 
-        k8s-nodes:
+        k8snodes:
           children:
 
-            k8s-control-plane-nodes:
+            k8scontrolplanenodes:
               hosts:
                 pi-0:
                 pi-1:
                 pi-2:
 
-            k8s-worker-nodes:
+            k8sworkernodes:
               hosts:
               # pi-1:
               # pi-2:

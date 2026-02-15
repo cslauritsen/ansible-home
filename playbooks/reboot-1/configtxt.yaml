@@ -17,7 +17,7 @@
         path: /etc/hosts
 
 - name: Append cgroup settings to cmdline.txt
-  hosts: rpi-cluster
+  hosts: rpicluster
   become: yes
   tags:
     - rpi

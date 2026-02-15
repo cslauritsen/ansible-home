@@ -1,7 +1,7 @@
 ---
 
 - name: Install docker.io
-  hosts: rpi-cluster
+  hosts: rpicluster
   become: yes
   tasks:
     - name: Install docker.io

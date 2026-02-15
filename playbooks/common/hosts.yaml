@@ -17,7 +17,7 @@
         path: /etc/hosts
 
 - name: Setup /etc/avahi/hosts
-  hosts: rpi-cluster
+  hosts: rpicluster
   become: yes
   tasks:
     - name: Add longhorn.local to avahi hosts

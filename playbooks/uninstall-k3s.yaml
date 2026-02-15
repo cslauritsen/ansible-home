@@ -1,5 +1,5 @@
 - name: Check if the uninstall script exists
-  hosts: rpi-cluster
+  hosts: rpicluster
   tasks:
     - name: Check for the presence of the uninstaller
       ansible.builtin.stat:
@@ -7,7 +7,7 @@
       register: file_check
 
 - name: Uninstall k3s server
-  hosts: rpi-cluster
+  hosts: rpicluster
   become: yes
   tasks:
     - name: uninstall k3s
@@ -17,7 +17,7 @@
       when: file_check.stat.exists
 
 - name: Check if the agent uninstall script exists
-  hosts: rpi-cluster
+  hosts: rpicluster
   tasks:
     - name: Check for the presence of the uninstaller
       ansible.builtin.stat:
@@ -25,7 +25,7 @@
       register: agent_file_check
 
 - name: Uninstall k3s agent
-  hosts: rpi-cluster
+  hosts: rpicluster
   become: yes
   tasks:
     - name: uninstall k3s

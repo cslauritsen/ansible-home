@@ -82,7 +82,7 @@ Deploy ArgoCD on your K3s cluster to enable GitOps-based deployment management, 
 #### 3.1 Prepare GitHub Repository
 - [x] Ensure ansible-home repo is pushed to GitHub
 - [x] Create GitHub Personal Access Token (PAT) with `repo` scope
-- [x] Or generate SSH deploy key: `ssh-keygen -t ed25519 -C "argocd@rpi-cluster" -f ~/.ssh/argocd-deploy-key`
+- [x] Or generate SSH deploy key: `ssh-keygen -t ed25519 -C "argocd@rpicluster" -f ~/.ssh/argocd-deploy-key`
 
 #### 3.2 Create Repository Secret in ArgoCD
 - [x] Option A - Via UI: Add repository in ArgoCD Settings → Repositories
