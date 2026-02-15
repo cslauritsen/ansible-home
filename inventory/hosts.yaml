@@ -1,7 +1,7 @@
 all:
   children:
 
-    debian_based:
+    debian-based:
       hosts:
         pi-0:
         pi-1:

@@ -1,5 +1,5 @@
 - name: Update all packages to the latest version
-  hosts: debian_based
+  hosts: debian-based
   tasks:
    - name: Apt upgrade
      become: yes
