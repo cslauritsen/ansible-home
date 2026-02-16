@@ -17,8 +17,7 @@ spec:
   syncPolicy:
     syncOptions:
       - CreateNamespace=true
-    # Start with manual sync - change to automated later
-    # automated:
-    #   prune: true
-    #   selfHeal: true
+    automated:
+      prune: true
+      selfHeal: true
 
