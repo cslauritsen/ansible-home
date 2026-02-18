@@ -37,73 +37,43 @@ config:
   # -- base url path at which headlamp should run
   baseURL: ""
   oidc:
-    # Option 1:
-    # @param config.oidc.secret - OIDC secret configuration
-    # If you want to use an existing secret, set create to false and provide the name of the secret.
-    # If you want to create a new secret, set create to true and provide the name of the secret.
-    # Also provide the values for clientID, clientSecret, issuerURL, and scopes.
-    # Example:
-    # config:
-    #   oidc:
-    #     secret:
-    #       create: true
-    #       name: oidc
+    # OIDC is DISABLED when using OAuth2-Proxy for authentication
+    # OAuth2-Proxy handles all authentication, and Headlamp uses its ServiceAccount
+    # for Kubernetes API access with cluster-admin permissions.
     secret:
       # -- Generate OIDC secret. If true, will generate a secret using .config.oidc.
       create: false
       # -- Name of the OIDC secret.
       name: ""
 
-    # Option 2:
-    # @param config.oidc - OIDC env configuration
-    # If you want to set the OIDC configuration directly, set the following values.
-    # Example:
-    # config:
-    #   oidc:
-    #     clientID: "clientID"
-    #     clientSecret: "clientSecret"
-    #     issuerURL: "issuerURL"
-    #     scopes: "scopes"
-
     # -- OIDC client ID
     clientID: ""
     # -- OIDC client secret
     clientSecret: ""
     # -- OIDC issuer URL
-    issuerURL: "https://accounts.google.com"
+    issuerURL: ""
     # -- OIDC scopes to be used
     scopes: ""
     # -- OIDC callback URL
-    callbackURL: "https://headlamp.home.planetlauritsen.com/oidc-callback"
+    callbackURL: ""
 
     # -- OIDC client to be used during token validation
     validatorClientID: ""
     # -- OIDC Issuer URL to be used during token validation
     validatorIssuerURL: ""
     # -- Use 'access_token' instead of 'id_token' when authenticating using OIDC
-    useAccessToken: true
+    useAccessToken: false
     # -- Use PKCE (Proof Key for Code Exchange) for enhanced security in OIDC flow
     usePKCE: false
 
-    # Option 3:
-    # @param config.oidc - External OIDC secret configuration
-    # If you want to use an external secret for OIDC configuration, enable this option.
-    # Provide the name of the secret to use.
-    # Example:
-    # config:
-    #   oidc:
-    #     secret:
-    #       create: false
-    #     externalSecret:
-    #       enabled: true
-    #       name: oidc
+    # OIDC external secret is DISABLED - not needed with OAuth2-Proxy
     externalSecret:
-      enabled: true
-      name: headlamp-oidc-manual
+      enabled: false
+      name: ""
 
     # -- URL to fetch additional user info for the /me endpoint.
     # For oauth2proxy /oauth2/userinfo can be used. Empty and it will not be used.
-    meUserInfoURL: "https://oauth2-proxy.home.planetlauritsen.com/oauth2/userinfo"
+    meUserInfoURL: ""
 
   # -- directory to look for plugins
   pluginsDir: "/headlamp/plugins"
