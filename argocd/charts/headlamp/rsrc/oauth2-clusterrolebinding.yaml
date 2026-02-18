@@ -1,0 +1,52 @@
+---
+# This ClusterRoleBinding grants cluster-admin privileges to OAuth2-authenticated users
+#
+# There are two approaches:
+# 1. Grant to Headlamp's service account (default - already configured in chart)
+# 2. Grant to specific Google email addresses (add subjects below)
+#
+# Note: For Google OAuth tokens to be recognized by Kubernetes API server,
+# the API server must be configured with OIDC authentication:
+#   --oidc-issuer-url=https://accounts.google.com
+#   --oidc-client-id=YOUR_CLIENT_ID
+#   --oidc-username-claim=email
+#
+# For k3s, add to /etc/rancher/k3s/config.yaml:
+#   kube-apiserver-arg:
+#     - "oidc-issuer-url=https://accounts.google.com"
+#     - "oidc-client-id=YOUR_CLIENT_ID"
+#     - "oidc-username-claim=email"
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: headlamp-oauth2-admin
+  annotations:
+    description: "Grants cluster-admin to OAuth2-authenticated users accessing Headlamp"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+  # The Headlamp service account already has cluster-admin via the chart's
+  # default ClusterRoleBinding. This binding is for mapping specific Google users.
+
+  # IMPORTANT: Uncomment and replace with your actual Google email(s) below:
+  - kind: User
+    name: csl4jc@gmail.com  # CHANGE THIS to your actual email
+    apiGroup: rbac.authorization.k8s.io
+
+  # Example: Multiple users
+  # - kind: User
+  #   name: admin@example.com
+  #   apiGroup: rbac.authorization.k8s.io
+  # - kind: User
+  #   name: devops@example.com
+  #   apiGroup: rbac.authorization.k8s.io
+
+  # Or grant to all authenticated users (NOT RECOMMENDED for production)
+  # - kind: Group
+  #   name: system:authenticated
+  #   apiGroup: rbac.authorization.k8s.io
+
+

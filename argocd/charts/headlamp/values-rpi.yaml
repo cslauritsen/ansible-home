@@ -81,7 +81,7 @@ config:
     # -- OIDC Issuer URL to be used during token validation
     validatorIssuerURL: ""
     # -- Use 'access_token' instead of 'id_token' when authenticating using OIDC
-    useAccessToken: false
+    useAccessToken: true
     # -- Use PKCE (Proof Key for Code Exchange) for enhanced security in OIDC flow
     usePKCE: false
 
@@ -103,7 +103,7 @@ config:
 
     # -- URL to fetch additional user info for the /me endpoint.
     # For oauth2proxy /oauth2/userinfo can be used. Empty and it will not be used.
-    meUserInfoURL: ""
+    meUserInfoURL: "https://oauth2-proxy.home.planetlauritsen.com/oauth2/userinfo"
 
   # -- directory to look for plugins
   pluginsDir: "/headlamp/plugins"
@@ -228,6 +228,10 @@ ingress:
   # -- Annotations for Ingress resource
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-dns
+    # OAuth2-Proxy authentication
+    nginx.ingress.kubernetes.io/auth-url: "https://oauth2-proxy.home.planetlauritsen.com/oauth2/auth"
+    nginx.ingress.kubernetes.io/auth-signin: "https://oauth2-proxy.home.planetlauritsen.com/oauth2/start?rd=https://$host$request_uri"
+    nginx.ingress.kubernetes.io/auth-response-headers: "Authorization,X-Auth-Request-User,X-Auth-Request-Email,X-Auth-Request-Access-Token"
   # kubernetes.io/tls-acme: "true"
 
   # -- Additional labels to add to the Ingress resource
