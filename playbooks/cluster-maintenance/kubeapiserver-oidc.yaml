@@ -3,9 +3,6 @@
   hosts: k8scontrolplanenodes
   become: true
   serial: 1   # rolling restart of control-plane nodes
-  vars_files:
-    - group_vars/k3s_control_plane.yaml
-    - group_vars/vault-google-k3s-oidc.yaml
 
   tasks:
 
