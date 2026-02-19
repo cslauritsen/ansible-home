@@ -29,7 +29,6 @@
             - oidc-username-claim={{ google_oidc.username_claim }}
             - oidc-groups-claim={{ google_oidc.groups_claim }}
             - oidc-username-prefix={{ google_oidc.username_prefix }}
-            - oidc-groups-prefix={{ google_oidc.groups_prefix }}
 
     - name: Inject Google OIDC client secret as env var for K3s
       lineinfile:
