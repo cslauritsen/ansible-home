@@ -1,0 +1,9 @@
+# group_vars/k3s_control_plane.yaml
+google_oidc:
+  issuer_url: "https://accounts.google.com"
+  client_id: "87763540819-3gpocvlptekbclrk4d5t0t78sns56rsr.apps.googleusercontent.com"
+  client_secret: "{{ vault_google_oidc_client_secret }}"
+  username_claim: "email"
+  groups_claim: "groups"
+  username_prefix: "oidc:"
+  groups_prefix: "oidc:"

@@ -1,0 +1,58 @@
+---
+- name: Configure K3s OIDC authentication (Google)
+  hosts: k8scontrolplanenodes
+  become: true
+  serial: 1   # rolling restart of control-plane nodes
+  vars_files:
+    - group_vars/k3s_control_plane.yaml
+    - group_vars/vault-google-k3s-oidc.yaml
+
+  tasks:
+
+    - name: Ensure K3s config directory exists
+      file:
+        path: /etc/rancher/k3s
+        state: directory
+        owner: root
+        group: root
+        mode: "0755"
+
+    - name: Inject OIDC configuration into K3s config
+      blockinfile:
+        path: /etc/rancher/k3s/config.yaml
+        create: yes
+        marker: "# {mark} ANSIBLE MANAGED OIDC CONFIG"
+        block: |
+          kube-apiserver-arg:
+            - oidc-issuer-url={{ google_oidc.issuer_url }}
+            - oidc-client-id={{ google_oidc.client_id }}
+            - oidc-username-claim={{ google_oidc.username_claim }}
+            - oidc-groups-claim={{ google_oidc.groups_claim }}
+            - oidc-username-prefix={{ google_oidc.username_prefix }}
+            - oidc-groups-prefix={{ google_oidc.groups_prefix }}
+
+    - name: Inject Google OIDC client secret as env var for K3s
+      lineinfile:
+        path: /etc/systemd/system/k3s.service.env
+        create: yes
+        line: 'K3S_OIDC_CLIENT_SECRET={{ google_oidc.client_secret }}'
+        mode: "0600"
+        owner: root
+        group: root
+
+    - name: Reload systemd
+      command: systemctl daemon-reexec
+
+    - name: Restart K3s server
+      systemd:
+        name: k3s
+        state: restarted
+        enabled: yes
+
+    - name: Wait for API server to be ready
+      shell: |
+        kubectl get --raw=/readyz >/dev/null 2>&1
+      register: apistatus
+      retries: 30
+      delay: 5
+      until: apistatus.rc == 0
