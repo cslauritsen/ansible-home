@@ -22,10 +22,10 @@ server:
       nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
       nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
       # OAuth2 proxy authentication
-      nginx.ingress.kubernetes.io/auth-url: "https://oauth2-proxy.home.planetlauritsen.com/oauth2/auth"
-      nginx.ingress.kubernetes.io/auth-signin: "https://oauth2-proxy.home.planetlauritsen.com/oauth2/start?rd=https://$host$request_uri"
+      disablednginx.ingress.kubernetes.io/auth-url: "https://oauth2-proxy.home.planetlauritsen.com/oauth2/auth"
+      disablednginx.ingress.kubernetes.io/auth-signin: "https://oauth2-proxy.home.planetlauritsen.com/oauth2/start?rd=https://$host$request_uri"
       # Pass authentication headers to ArgoCD
-      nginx.ingress.kubernetes.io/auth-response-headers: "X-Auth-Request-User,X-Auth-Request-Email"
+      disablednginx.ingress.kubernetes.io/auth-response-headers: "X-Auth-Request-User,X-Auth-Request-Email"
     hosts:
       - argocd.home.planetlauritsen.com
     tls:
@@ -39,9 +39,8 @@ server:
   extraArgs:
     - --insecure  # Terminate TLS at ingress level
 
-## Dex - Disable as we're using oauth2-proxy
 dex:
-  enabled: false
+  enabled: true
 
 ## Redis configuration - use default settings for ARM64 compatibility
 redis:
@@ -62,6 +61,18 @@ configs:
 
   # General ArgoCD configuration
   cm:
+    dex.config: |
+        connectors:
+          - type: google
+            id: google
+            name: Google
+            config:
+                issuer: https://accounts.google.com
+                clientID: 87763540819-b9p1bf6du800qu9apa46ai8gthei5hjd.apps.googleusercontent.com
+                clientSecret: $dex.google.clientSecret
+                userIDKey: email
+                orgs:
+                - name: planetlauritsen
     # Server URL
     url: https://argocd.home.planetlauritsen.com
 
@@ -73,7 +84,7 @@ configs:
 
     # Enable anonymous users - these are authenticated by oauth2-proxy
     # ArgoCD will trust that nginx has already authenticated the user
-    users.anonymous.enabled: "true"
+    users.anonymous.enabled: "false"
 
   # ArgoCD server parameters
   params:
@@ -89,23 +100,25 @@ configs:
 
     # RBAC policies - grant admin to anonymous users (authenticated by oauth2-proxy)
     policy.csv: |
+      # grant admin to specific google users
+      g, csl4jc@gmail.com, role:admin
+      g, 106840556952436428759, role:admin
+      
       # Grant full admin permissions to anonymous users (oauth2-proxy authenticated)
-      p, role:anonymous, applications, *, */*, allow
-      p, role:anonymous, clusters, *, *, allow
-      p, role:anonymous, repositories, *, *, allow
-      p, role:anonymous, projects, *, *, allow
-      p, role:anonymous, accounts, *, *, allow
-      p, role:anonymous, certificates, *, *, allow
-      p, role:anonymous, gpgkeys, *, *, allow
-      g, role:anonymous, role:admin
+      p, role:admin, applications, *, */*, allow
+      p, role:admin, clusters, *, *, allow
+      p, role:admin, repositories, *, *, allow
+      p, role:admin, projects, *, *, allow
+      p, role:admin, accounts, *, *, allow
+      p, role:admin, certificates, *, *, allow
+      p, role:admin, gpgkeys, *, *, allow
+      g, role:admin, role:admin
       # p, role:anonymous, projects, *, *, allow
       # p, role:anonymous, accounts, *, *, allow
       # p, role:anonymous, certificates, *, *, allow
       # p, role:anonymous, gpgkeys, *, *, allow
       # g, role:anonymous, role:admin
       
-      # Alternative: If you want granular control by email, replace above with:
-      g, csl4jc@gmail.com, role:admin
       # g, your-email@example.com, role:admin
       # g, another-admin@example.com, role:admin
       # And remove the role:anonymous admin grant
