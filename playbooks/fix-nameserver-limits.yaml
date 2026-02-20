@@ -1,0 +1,61 @@
+---
+- name: Fix nameserver limits exceeded
+  hosts: all
+  become: true
+  vars:
+    # Keep at most three nameservers to avoid systemd-resolved limits.
+    nameservers:
+      - 8.8.8.8
+      - 8.8.4.4
+      - 2001:4860:4860::8888
+    # Optional search domains (empty by default).
+    search_domains: []
+  tasks:
+    - name: Limit nameserver list to three entries
+      ansible.builtin.set_fact:
+        limited_nameservers: "{{ nameservers[:3] }}"
+
+    - name: Collect service facts
+      ansible.builtin.service_facts:
+
+    - name: Detect systemd-resolved
+      ansible.builtin.set_fact:
+        use_systemd_resolved: "{{ 'systemd-resolved.service' in ansible_facts.services }}"
+
+    - name: Configure systemd-resolved nameservers
+      ansible.builtin.copy:
+        dest: /etc/systemd/resolved.conf
+        owner: root
+        group: root
+        mode: "0644"
+        content: |
+          [Resolve]
+          DNS={{ limited_nameservers | join(' ') }}
+          {% if search_domains | length > 0 %}
+          Domains={{ search_domains | join(' ') }}
+          {% endif %}
+      when: use_systemd_resolved
+
+    - name: Restart systemd-resolved
+      ansible.builtin.service:
+        name: systemd-resolved
+        state: restarted
+        enabled: true
+      when: use_systemd_resolved
+
+    - name: Write resolv.conf when systemd-resolved is not present
+      ansible.builtin.copy:
+        dest: /etc/resolv.conf
+        owner: root
+        group: root
+        mode: "0644"
+        content: |
+          # Managed by Ansible: limit nameservers to avoid resolver limits.
+          {% if search_domains | length > 0 %}
+          search {{ search_domains | join(' ') }}
+          {% endif %}
+          {% for ns in limited_nameservers %}
+          nameserver {{ ns }}
+          {% endfor %}
+      when: not use_systemd_resolved
+
