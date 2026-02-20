@@ -112,7 +112,8 @@ config:
   # tlsCertPath: "/headlamp-cert/headlamp-ca.crt"
   # tlsKeyPath: "/headlamp-cert/headlamp-tls.key"
   # Extra arguments that can be given to the container. See charts/headlamp/README.md for more information.
-  extraArgs: []
+  extraArgs:
+    - --insecure-skip-tls-verify=true
 
 # -- An optional list of environment variables
 # env:
