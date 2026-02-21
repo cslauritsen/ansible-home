@@ -8,7 +8,9 @@ The chart is vendored into this repo in the `chart` directory.
 Basic dup of the image:
 
     VER=0.27.2
-    docker build --build-arg BASE_VERSION=$VER -t cslauritsen/sealed-secrets-controller:$VER-csl .
+    docker build --build-arg BASE_VERSION=$VER \
+      --platform linux/arm64 \
+      -t cslauritsen/sealed-secrets-controller:$VER-csl .
     docker push cslauritsen/sealed-secrets-controller:$VER-csl
 
 # Bootstrapping the Keypair
