@@ -26,6 +26,7 @@ server:
       disablednginx.ingress.kubernetes.io/auth-signin: "https://oauth2-proxy.home.planetlauritsen.com/oauth2/start?rd=https://$host$request_uri"
       # Pass authentication headers to ArgoCD
       disablednginx.ingress.kubernetes.io/auth-response-headers: "X-Auth-Request-User,X-Auth-Request-Email"
+      nginx.ingress.kubernetes.io/whitelist-source-range: "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,165.225.0.0/17"
     hosts:
       - argocd.home.planetlauritsen.com
     tls:
