@@ -8,15 +8,14 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/cslauritsen/ansible-home.git
-    targetRevision: main
-    path: argocd/manifests/cnpg
+    repoURL: https://cloudnative-pg.github.io/charts
+    chart: cloudnative-pg
   destination:
     server: https://kubernetes.default.svc
     namespace: cnpg-system
   syncPolicy:
     syncOptions:
-      - CreateNamespace=false
+      - CreateNamespace=true
     automated:
       prune: true
       selfHeal: true
